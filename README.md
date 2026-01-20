@@ -1,4 +1,4 @@
-# 🌡️ Climate Group Helper
+# 🌡️ Climate Group Helper - Area-Based Window Control Fork
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/bjrnptrsn/climate_group_helper/main/assets/icon@2x.png" alt="Climate Group Helper Icon" width="128"/>
@@ -6,14 +6,36 @@
 
 <p align="center">
   <a href="https://github.com/hacs/integration"><img src="https://img.shields.io/badge/HACS-Custom-orange.svg" alt="HACS"/></a>
-  <a href="https://github.com/bjrnptrsn/climate_group_helper/releases"><img src="https://img.shields.io/github/v/release/bjrnptrsn/climate_group_helper" alt="Release"/></a>
+  <a href="https://github.com/bjrnptrsn/climate_group_helper/releases"><img src="https://img.shields.io/github/v/release/bjrnptrsn/climate_group_helper" alt="Original Release"/></a>
 </p>
 
-Combine multiple climate devices into a single, powerful entity for Home Assistant. Simplify your dashboard, streamline automations, and control entire rooms or zones as one unit.
+> ⚠️ **EXPERIMENTAL FORK - TEST ONLY**  
+> This is a **fork** of the original [bjrnptrsn/climate_group_helper](https://github.com/bjrnptrsn/climate_group_helper) with experimental **Area-Based Window Control** functionality.  
+> **DO NOT USE IN PRODUCTION** - This is for testing purposes only!
+
+## 🆕 New Features in This Fork
+
+### 🪟 **Area-Based Window Control**
+Revolutionary new window control mode that automatically manages thermostats based on window states **per area**:
+
+- **🏠 Area-Aware**: Each window sensor controls only thermostats in its assigned Home Assistant area
+- **⏱️ Configurable Delays**: Separate delays for window open (15s default) and close (30s default)
+- **🔄 Event-Driven**: Real-time response to window state changes with intelligent timer management
+- **🌐 Multi-Language**: Full Italian translation support with proper UI integration
+- **🔧 Future-Proof**: Uses modern Home Assistant threading patterns (compatible with HA 2025.4+)
+
+### 📋 How Area-Based Control Works
+
+1. **Window Opens** → Timer starts (15s default)
+2. **After delay** → System checks if window still open
+3. **If yes** → Turns OFF all thermostats in the same area
+4. **Window Closes** → Timer starts (30s default)  
+5. **After delay** → Checks if other windows in area are still open
+6. **If no other windows open** → Restores thermostats to group target mode
 
 ---
 
-## ✨ Key Features
+## ✨ Original Features (Unchanged)
 
 ### 🎛️ Unified Control
 Change settings on the group, and all member devices update to match. No more managing 5 thermostats individually.
@@ -167,6 +189,82 @@ The configuration is organized into a wizard-style flow. Use the **Configure** b
 
 ---
 
+## 🪟 Configuring Area-Based Window Control
+
+### Prerequisites
+1. **Areas configured** in Home Assistant (Settings → Areas & Labels → Areas)
+2. **Window sensors assigned** to their respective areas
+3. **Thermostats assigned** to their respective areas
+
+### Setup Steps
+
+1. **Create Climate Group** as usual with your thermostats
+2. **Configure Window Control**:
+   - Go to group settings → **Window Control**
+   - Set **Window Control Mode** to **"Area-based Mode"**
+   - Select all window sensors you want to monitor
+   - Configure delays:
+     - **Window Open Delay**: Time to wait before turning off thermostats (default: 15s)
+     - **Close Delay**: Time to wait before restoring thermostats (default: 30s)
+
+### Example Configuration
+
+```yaml
+# Areas in Home Assistant:
+# - studio (Studio)
+# - cameretta (Bedroom)  
+# - bagno (Bathroom)
+
+# Window sensors assigned to areas:
+# - binary_sensor.finestra_studio_contact → studio area
+# - binary_sensor.finestra_cameretta_contact → cameretta area
+# - binary_sensor.finestra_bagno_contact → bagno area
+
+# Thermostats assigned to areas:
+# - climate.termostato_studio → studio area
+# - climate.termostato_cameretta → cameretta area
+# - climate.termostato_bagno → bagno area
+```
+
+### Behavior Example
+- **Studio window opens** → After 15s → `climate.termostato_studio` turns OFF
+- **Studio window closes** → After 30s → `climate.termostato_studio` restores to group mode (e.g., heat)
+- **Other areas unaffected** by studio window changes
+
+### Debug Logging
+Enable debug logging to monitor window control activity:
+
+```yaml
+logger:
+  default: info
+  logs:
+    custom_components.climate_group_helper.window_control: debug
+```
+
+---
+
+## ⚠️ Fork Limitations & Warnings
+
+### 🚨 **EXPERIMENTAL STATUS**
+- This fork contains **experimental features** not present in the original
+- **NOT RECOMMENDED** for production environments
+- May contain bugs or unexpected behavior
+- **No official support** - use at your own risk
+
+### 🔧 **Technical Limitations**
+- Area-based window control requires **Home Assistant Areas** to be properly configured
+- Window sensors and thermostats **must be assigned** to their respective areas
+- Only works with **binary sensors** for window detection (contact sensors, door sensors)
+- **Threading warnings** may appear in logs (using future-compatible patterns)
+
+### 🔄 **Migration from Original**
+If you want to return to the original version:
+1. Remove this custom integration
+2. Install the original from HACS
+3. Reconfigure your groups (settings may not transfer)
+
+---
+
 ## 🔍 Troubleshooting
 
 **Issues after updating?**
@@ -183,12 +281,27 @@ logger:
 
 ---
 
-## ❤️ Contributing
+## ❤️ Contributing & Credits
 
-Found a bug or have an idea? [Open an issue](https://github.com/bjrnptrsn/climate_group_helper/issues) on GitHub.
+### Original Project
+This fork is based on the excellent work by **bjrnptrsn**:
+- **Original Repository**: [bjrnptrsn/climate_group_helper](https://github.com/bjrnptrsn/climate_group_helper)
+- **Original Author**: [@bjrnptrsn](https://github.com/bjrnptrsn)
+
+### Fork Contributions
+- **Area-Based Window Control**: Complete implementation with area-aware thermostat management
+- **Italian Translations**: Full UI translation support
+- **Future-Proof Threading**: Compatible with Home Assistant 2025.4+
+- **Enhanced Documentation**: Comprehensive setup and configuration guides
+
+### Bug Reports
+- **Original features**: Report to [original repository](https://github.com/bjrnptrsn/climate_group_helper/issues)
+- **Fork-specific features**: This is experimental code - no official support provided
 
 ---
 
 ## 📄 License
 
-MIT License
+MIT License (same as original project)
+
+**Disclaimer**: This fork is provided "as-is" without warranty. The original author is not responsible for any issues arising from this experimental fork.
