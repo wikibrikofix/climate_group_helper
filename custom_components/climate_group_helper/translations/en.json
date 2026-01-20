@@ -1,4 +1,13 @@
 {
+  "selector": {
+    "window_mode": {
+      "options": {
+        "off": "Disabled",
+        "on": "Legacy Mode", 
+        "area_based": "Area-based Mode"
+      }
+    }
+  },
   "config": {
     "step": {
       "user": {

@@ -1,4 +1,13 @@
 {
+  "selector": {
+    "window_mode": {
+      "options": {
+        "off": "Disabled",
+        "on": "Legacy Mode",
+        "area_based": "Area-based Mode"
+      }
+    }
+  },
   "config": {
     "step": {
       "user": {
@@ -128,7 +137,9 @@
           "zone_sensor": "Zone Window Sensor",
           "room_open_delay": "Room Open Delay (seconds)",
           "zone_open_delay": "Zone Open Delay (seconds)",
-          "close_delay": "Close Delay (seconds)"
+          "close_delay": "Close Delay (seconds)",
+          "window_sensors": "Window Sensors (Area-based)",
+          "window_open_delay": "Window Open Delay (seconds)"
         },
         "data_description": {
           "window_mode": "Enable or disable climate group based on window/door sensors. When enabled, HVAC mode sets to 'off' when windows open and restores to the previous state when closed.",
@@ -136,7 +147,9 @@
           "zone_sensor": "Binary sensor for other windows/doors in the zone/floor. Triggers the longer delay.",
           "room_open_delay": "Time to wait after room window opens before turning off heating.",
           "zone_open_delay": "Time to wait after zone window opens before turning off heating.",
-          "close_delay": "Time to wait after all windows close before restoring heating."
+          "close_delay": "Time to wait after all windows close before restoring heating.",
+          "window_sensors": "List of window/door sensors for area-based control. Each sensor will control thermostats in its assigned area.",
+          "window_open_delay": "Time to wait after any window opens before turning off thermostats in the same area."
         }
       },
       "schedule": {

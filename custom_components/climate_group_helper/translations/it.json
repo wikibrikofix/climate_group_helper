@@ -1,4 +1,13 @@
 {
+  "selector": {
+    "window_mode": {
+      "options": {
+        "off": "Disabilitato",
+        "on": "Modalità Legacy",
+        "area_based": "Modalità per Area"
+      }
+    }
+  },
   "config": {
     "abort": {
       "already_configured": "Questo gruppo è già configurato.",
@@ -207,6 +216,8 @@
           "room_open_delay": "Ritardo Apertura Stanza (s)",
           "room_sensor": "Sensore Finestra Stanza",
           "window_mode": "Mod. Controllo Finestre",
+          "window_open_delay": "Ritardo Apertura Finestra (s)",
+          "window_sensors": "Sensori Finestre (Per Area)",
           "zone_open_delay": "Ritardo Apertura Zona (s)",
           "zone_sensor": "Sensore Finestra Zona"
         },
@@ -215,6 +226,8 @@
           "room_open_delay": "Tempo di attesa dopo apertura finestra stanza.",
           "room_sensor": "Sensore binario per la finestra della stanza. Attiva il ritardo breve.",
           "window_mode": "Abilita il gruppo in base ai sensori. HVAC va su 'off' quando le finestre sono aperte.",
+          "window_open_delay": "Tempo di attesa dopo apertura di qualsiasi finestra prima di spegnere i termostati nella stessa area.",
+          "window_sensors": "Lista di sensori finestre/porte per il controllo per area. Ogni sensore controllerà i termostati nella sua area assegnata.",
           "zone_open_delay": "Tempo di attesa dopo apertura finestra zona.",
           "zone_sensor": "Sensore binario per altre finestre nella zona. Attiva il ritardo lungo."
         },
