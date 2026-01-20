@@ -1,13 +1,4 @@
 {
-  "selector": {
-    "window_mode": {
-      "options": {
-        "off": "Disabilitato",
-        "on": "Modalità Legacy",
-        "area_based": "Modalità per Area"
-      }
-    }
-  },
   "config": {
     "abort": {
       "already_configured": "Questo gruppo è già configurato.",
@@ -243,6 +234,13 @@
         "union": "Unione (Utente Avanzato - Tutte le Funzioni)"
       }
     },
+    "window_mode": {
+      "options": {
+        "off": "Disabilitato",
+        "on": "Modalità Legacy",
+        "area_based": "Modalità per Area"
+      }
+    },
     "humidity_current_avg": {
       "options": {
         "max": "Massimo (Più Alto)",
@@ -314,12 +312,6 @@
         "half": "Mezzo Grado (0.5°)",
         "integer": "Numeri Interi (1°)",
         "none": "Nessun Arrotondamento (Esatto)"
-      }
-    },
-    "window_mode": {
-      "options": {
-        "off": "Spento – Il controllo finestre è disattivato",
-        "on": "Acceso – Il controllo finestre è attivato"
       }
     }
   },
