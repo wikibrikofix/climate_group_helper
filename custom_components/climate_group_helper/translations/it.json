@@ -137,12 +137,14 @@
         "data": {
           "expose_member_entities": "Esponi elenco dei membri",
           "expose_smart_sensors": "Esponi sensori intelligenti",
-          "ignore_off_members": "Rispetta lo stato OFF dei membri"
+          "ignore_off_members": "Rispetta lo stato Off dei membri",
+          "min_temp_off": "Temperatura minima quando spento"
         },
         "data_description": {
           "expose_member_entities": "Crea un attributo che elenca tutti gli ID delle entità membro.",
           "expose_smart_sensors": "Crea entità sensore aggiuntive per temperatura e umidità del gruppo (utile per i grafici).",
-          "ignore_off_members": "Se abilitato, il gruppo NON accenderà i membri che sono attualmente SPENTI. (Sincronizzazione parziale)"
+          "ignore_off_members": "Se abilitato, il gruppo NON accenderà i membri che sono attualmente SPENTI. (Sincronizzazione parziale)",
+          "min_temp_off": "Se abilitato, invia la temperatura minima del dispositivo (es. 5°C) quando si spegne il gruppo. (Assicura chiusura valvola)"
         },
         "description": "Funzionalità aggiuntive ed esposizione delle entità.",
         "title": "Altre Impostazioni"
@@ -207,8 +209,6 @@
           "room_open_delay": "Ritardo Apertura Stanza (s)",
           "room_sensor": "Sensore Finestra Stanza",
           "window_mode": "Mod. Controllo Finestre",
-          "window_open_delay": "Ritardo Apertura Finestra (s)",
-          "window_sensors": "Sensori Finestre (Per Area)",
           "zone_open_delay": "Ritardo Apertura Zona (s)",
           "zone_sensor": "Sensore Finestra Zona"
         },
@@ -217,8 +217,6 @@
           "room_open_delay": "Tempo di attesa dopo apertura finestra stanza.",
           "room_sensor": "Sensore binario per la finestra della stanza. Attiva il ritardo breve.",
           "window_mode": "Abilita il gruppo in base ai sensori. HVAC va su 'off' quando le finestre sono aperte.",
-          "window_open_delay": "Tempo di attesa dopo apertura di qualsiasi finestra prima di spegnere i termostati nella stessa area.",
-          "window_sensors": "Lista di sensori finestre/porte per il controllo per area. Ogni sensore controllerà i termostati nella sua area assegnata.",
           "zone_open_delay": "Tempo di attesa dopo apertura finestra zona.",
           "zone_sensor": "Sensore binario per altre finestre nella zona. Attiva il ritardo lungo."
         },
@@ -232,13 +230,6 @@
       "options": {
         "intersection": "Intersezione (Modalità Sicura - Funzioni Comuni)",
         "union": "Unione (Utente Avanzato - Tutte le Funzioni)"
-      }
-    },
-    "window_mode": {
-      "options": {
-        "off": "Disabilitato",
-        "on": "Modalità Legacy",
-        "area_based": "Modalità per Area"
       }
     },
     "humidity_current_avg": {
@@ -312,6 +303,12 @@
         "half": "Mezzo Grado (0.5°)",
         "integer": "Numeri Interi (1°)",
         "none": "Nessun Arrotondamento (Esatto)"
+      }
+    },
+    "window_mode": {
+      "options": {
+        "off": "Spento – Il controllo finestre è disattivato",
+        "on": "Acceso – Il controllo finestre è attivato"
       }
     }
   },

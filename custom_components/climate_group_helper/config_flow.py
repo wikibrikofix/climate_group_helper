@@ -40,6 +40,7 @@ from .const import (
     CONF_TEMP_TARGET_AVG,
     CONF_TEMP_TARGET_ROUND,
     CONF_TEMP_UPDATE_TARGETS,
+    CONF_MIN_TEMP_OFF,
     CONF_WINDOW_MODE,
     CONF_WINDOW_SENSORS,
     CONF_WINDOW_OPEN_DELAY,
@@ -477,124 +478,133 @@ class ClimateGroupOptionsFlow(config_entries.OptionsFlow):
         current_config = {**self._config_entry.options, **(user_input or {})}
 
         if user_input is not None:
-            # Handle area-based mode
-            if user_input.get(CONF_WINDOW_MODE) == WindowControlMode.AREA_BASED:
+            # Clean up based on mode
+            window_mode = user_input.get(CONF_WINDOW_MODE, WindowControlMode.OFF)
+            
+            if window_mode == WindowControlMode.AREA_BASED:
+                # Remove legacy config
+                for key in [CONF_ROOM_SENSOR, CONF_ZONE_SENSOR, CONF_ROOM_OPEN_DELAY, CONF_ZONE_OPEN_DELAY]:
+                    current_config.pop(key, None)
+                # Clear window_sensors if empty
                 if not user_input.get(CONF_WINDOW_SENSORS):
+                    current_config.pop(CONF_WINDOW_SENSORS, None)
                     current_config[CONF_WINDOW_MODE] = WindowControlMode.OFF
-                # Clear legacy config
-                current_config.pop(CONF_ROOM_SENSOR, None)
-                current_config.pop(CONF_ZONE_SENSOR, None)
-                current_config.pop(CONF_ROOM_OPEN_DELAY, None)
-                current_config.pop(CONF_ZONE_OPEN_DELAY, None)
             else:
-                # Legacy mode - clear area-based config
-                current_config.pop(CONF_WINDOW_SENSORS, None)
-                current_config.pop(CONF_WINDOW_OPEN_DELAY, None)
-                
-                # If user clears a sensor field, remove it from config
-                for key in [CONF_ROOM_SENSOR, CONF_ZONE_SENSOR]:
-                    if key not in user_input or not user_input.get(key):
-                        current_config.pop(key, None)
-                # Auto-disable window control if no sensors configured
+                # Remove area-based config
+                for key in [CONF_WINDOW_SENSORS, CONF_WINDOW_OPEN_DELAY]:
+                    current_config.pop(key, None)
+                # Clear legacy sensors if empty
+                if CONF_ROOM_SENSOR not in user_input or not user_input.get(CONF_ROOM_SENSOR):
+                    current_config.pop(CONF_ROOM_SENSOR, None)
+                if CONF_ZONE_SENSOR not in user_input or not user_input.get(CONF_ZONE_SENSOR):
+                    current_config.pop(CONF_ZONE_SENSOR, None)
+                # Auto-disable if no sensors
                 if CONF_ROOM_SENSOR not in current_config and CONF_ZONE_SENSOR not in current_config:
                     current_config[CONF_WINDOW_MODE] = WindowControlMode.OFF
             
             self._update_config_if_changed(current_config)
             return await self.async_step_schedule()
 
+        # Build dynamic schema based on current mode
         window_mode = current_config.get(CONF_WINDOW_MODE, WindowControlMode.OFF)
+        
+        schema_dict = {
+            vol.Required(
+                CONF_WINDOW_MODE,
+                default=window_mode,
+            ): selector.SelectSelector(
+                selector.SelectSelectorConfig(
+                    options=[opt.value for opt in WindowControlMode],
+                    mode=selector.SelectSelectorMode.DROPDOWN,
+                    translation_key="window_mode",
+                )
+            ),
+        }
 
-        schema = vol.Schema(
-            {
-                vol.Required(
-                    CONF_WINDOW_MODE,
-                    default=window_mode,
-                ): selector.SelectSelector(
-                    selector.SelectSelectorConfig(
-                        options=[opt.value for opt in WindowControlMode],
-                        mode=selector.SelectSelectorMode.DROPDOWN,
-                        translation_key="window_mode",
-                    )
-                ),
-                vol.Optional(
-                    CONF_WINDOW_SENSORS,
-                    default=current_config.get(CONF_WINDOW_SENSORS, []),
-                ): selector.EntitySelector(
-                    selector.EntitySelectorConfig(
-                        domain="binary_sensor",
-                        multiple=True,
-                    )
-                ),
-                vol.Optional(
-                    CONF_WINDOW_OPEN_DELAY,
-                    default=current_config.get(CONF_WINDOW_OPEN_DELAY, DEFAULT_WINDOW_OPEN_DELAY),
-                ): selector.NumberSelector(
-                    selector.NumberSelectorConfig(
-                        min=0,
-                        max=120,
-                        step=1,
-                        unit_of_measurement="s",
-                        mode=selector.NumberSelectorMode.SLIDER,
-                    )
-                ),
-                vol.Optional(
-                    CONF_ROOM_SENSOR,
-                    description={"suggested_value": current_config.get(CONF_ROOM_SENSOR)},
-                ): selector.EntitySelector(
-                    selector.EntitySelectorConfig(
-                        domain="binary_sensor",
-                    )
-                ),
-                vol.Optional(
-                    CONF_ZONE_SENSOR,
-                    description={"suggested_value": current_config.get(CONF_ZONE_SENSOR)},
-                ): selector.EntitySelector(
-                    selector.EntitySelectorConfig(
-                        domain="binary_sensor",
-                    )
-                ),
-                vol.Optional(
-                    CONF_ROOM_OPEN_DELAY,
-                    default=current_config.get(CONF_ROOM_OPEN_DELAY, DEFAULT_ROOM_OPEN_DELAY),
-                ): selector.NumberSelector(
-                    selector.NumberSelectorConfig(
-                        min=0,
-                        max=120,
-                        step=1,
-                        unit_of_measurement="s",
-                        mode=selector.NumberSelectorMode.SLIDER,
-                    )
-                ),
-                vol.Optional(
-                    CONF_ZONE_OPEN_DELAY,
-                    default=current_config.get(CONF_ZONE_OPEN_DELAY, DEFAULT_ZONE_OPEN_DELAY),
-                ): selector.NumberSelector(
-                    selector.NumberSelectorConfig(
-                        min=1,
-                        max=900,
-                        step=5,
-                        unit_of_measurement="s",
-                        mode=selector.NumberSelectorMode.SLIDER,
-                    )
-                ),
-                vol.Optional(
-                    CONF_CLOSE_DELAY,
-                    default=current_config.get(CONF_CLOSE_DELAY, DEFAULT_CLOSE_DELAY),
-                ): selector.NumberSelector(
-                    selector.NumberSelectorConfig(
-                        min=0,
-                        max=300,
-                        step=1,
-                        unit_of_measurement="s",
-                        mode=selector.NumberSelectorMode.SLIDER,
-                    )
-                ),
-            }
-        )
+        # Area-based mode fields
+        if window_mode == WindowControlMode.AREA_BASED:
+            schema_dict[vol.Optional(
+                CONF_WINDOW_SENSORS,
+                description={"suggested_value": current_config.get(CONF_WINDOW_SENSORS, [])},
+            )] = selector.EntitySelector(
+                selector.EntitySelectorConfig(
+                    domain="binary_sensor",
+                    multiple=True,
+                )
+            )
+            schema_dict[vol.Optional(
+                CONF_WINDOW_OPEN_DELAY,
+                default=current_config.get(CONF_WINDOW_OPEN_DELAY, DEFAULT_WINDOW_OPEN_DELAY),
+            )] = selector.NumberSelector(
+                selector.NumberSelectorConfig(
+                    min=0,
+                    max=120,
+                    step=1,
+                    unit_of_measurement="s",
+                    mode=selector.NumberSelectorMode.SLIDER,
+                )
+            )
+        # Legacy mode fields
+        elif window_mode == WindowControlMode.ON:
+            schema_dict[vol.Optional(
+                CONF_ROOM_SENSOR,
+                description={"suggested_value": current_config.get(CONF_ROOM_SENSOR)},
+            )] = selector.EntitySelector(
+                selector.EntitySelectorConfig(
+                    domain="binary_sensor",
+                )
+            )
+            schema_dict[vol.Optional(
+                CONF_ZONE_SENSOR,
+                description={"suggested_value": current_config.get(CONF_ZONE_SENSOR)},
+            )] = selector.EntitySelector(
+                selector.EntitySelectorConfig(
+                    domain="binary_sensor",
+                )
+            )
+            schema_dict[vol.Optional(
+                CONF_ROOM_OPEN_DELAY,
+                default=current_config.get(CONF_ROOM_OPEN_DELAY, DEFAULT_ROOM_OPEN_DELAY),
+            )] = selector.NumberSelector(
+                selector.NumberSelectorConfig(
+                    min=0,
+                    max=120,
+                    step=1,
+                    unit_of_measurement="s",
+                    mode=selector.NumberSelectorMode.SLIDER,
+                )
+            )
+            schema_dict[vol.Optional(
+                CONF_ZONE_OPEN_DELAY,
+                default=current_config.get(CONF_ZONE_OPEN_DELAY, DEFAULT_ZONE_OPEN_DELAY),
+            )] = selector.NumberSelector(
+                selector.NumberSelectorConfig(
+                    min=1,
+                    max=900,
+                    step=5,
+                    unit_of_measurement="s",
+                    mode=selector.NumberSelectorMode.SLIDER,
+                )
+            )
+
+        # Close delay (common to both modes)
+        if window_mode != WindowControlMode.OFF:
+            schema_dict[vol.Optional(
+                CONF_CLOSE_DELAY,
+                default=current_config.get(CONF_CLOSE_DELAY, DEFAULT_CLOSE_DELAY),
+            )] = selector.NumberSelector(
+                selector.NumberSelectorConfig(
+                    min=0,
+                    max=300,
+                    step=1,
+                    unit_of_measurement="s",
+                    mode=selector.NumberSelectorMode.SLIDER,
+                )
+            )
 
         return self.async_show_form(
             step_id="window_control",
-            data_schema=schema,
+            data_schema=vol.Schema(schema_dict),
         )
 
     async def async_step_schedule(
@@ -651,6 +661,10 @@ class ClimateGroupOptionsFlow(config_entries.OptionsFlow):
                 vol.Optional(
                     CONF_IGNORE_OFF_MEMBERS,
                     default=current_config.get(CONF_IGNORE_OFF_MEMBERS, False),
+                ): bool,
+                vol.Optional(
+                    CONF_MIN_TEMP_OFF,
+                    default=current_config.get(CONF_MIN_TEMP_OFF, False),
                 ): bool,
             }
         )

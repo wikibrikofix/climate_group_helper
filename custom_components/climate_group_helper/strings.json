@@ -1,13 +1,4 @@
 {
-  "selector": {
-    "window_mode": {
-      "options": {
-        "off": "Disabled",
-        "on": "Legacy Mode",
-        "area_based": "Area-based Mode"
-      }
-    }
-  },
   "config": {
     "step": {
       "user": {
@@ -137,9 +128,9 @@
           "zone_sensor": "Zone Window Sensor",
           "room_open_delay": "Room Open Delay (seconds)",
           "zone_open_delay": "Zone Open Delay (seconds)",
-          "close_delay": "Close Delay (seconds)",
           "window_sensors": "Window Sensors (Area-based)",
-          "window_open_delay": "Window Open Delay (seconds)"
+          "window_open_delay": "Window Open Delay (seconds)",
+          "close_delay": "Close Delay (seconds)"
         },
         "data_description": {
           "window_mode": "Enable or disable climate group based on window/door sensors. When enabled, HVAC mode sets to 'off' when windows open and restores to the previous state when closed.",
@@ -147,9 +138,9 @@
           "zone_sensor": "Binary sensor for other windows/doors in the zone/floor. Triggers the longer delay.",
           "room_open_delay": "Time to wait after room window opens before turning off heating.",
           "zone_open_delay": "Time to wait after zone window opens before turning off heating.",
-          "close_delay": "Time to wait after all windows close before restoring heating.",
-          "window_sensors": "List of window/door sensors for area-based control. Each sensor will control thermostats in its assigned area.",
-          "window_open_delay": "Time to wait after any window opens before turning off thermostats in the same area."
+          "window_sensors": "Select all window sensors to monitor. When a window opens, only climate devices in the same area will be turned off.",
+          "window_open_delay": "Time to wait before turning off heating after a window opens.",
+          "close_delay": "Time to wait after all windows close before restoring heating."
         }
       },
       "schedule": {
@@ -168,12 +159,14 @@
         "data": {
           "expose_smart_sensors": "Expose Smart Sensors",
           "expose_member_entities": "Expose Member List",
-          "ignore_off_members": "Respect Member OFF State"
+          "ignore_off_members": "Respect Member Off State",
+          "min_temp_off": "Minimum Temperature when Off"
         },
         "data_description": {
           "expose_smart_sensors": "Creates extra sensor entities for the group's temperature and humidity (useful for graphs).",
           "expose_member_entities": "Creates an attribute listing all member entity IDs.",
-          "ignore_off_members": "If enabled, the group will NOT turn on members that are currently OFF. (Partial Sync)"
+          "ignore_off_members": "If enabled, the group will NOT turn on members that are currently Off. (Partial Sync)",
+          "min_temp_off": "If enabled, sends the device's minimum temperature (e.g. 5°C) when turning the group off. (Force Valve Close)"
         }
       }
     },
@@ -243,7 +236,8 @@
     "window_mode": {
       "options": {
         "off": "Off – Window control is disabled",
-        "on": "On – Window control is enabled"
+        "on": "On – Window control is enabled",
+        "area_based": "Area-based – Automatic zone detection"
       }
     },
     "hvac_mode_strategy": {

@@ -1,307 +1,363 @@
-# 🌡️ Climate Group Helper - Area-Based Window Control Fork
+# Climate Group Helper - Area-Based Window Control
 
-<p align="center">
-  <img src="https://raw.githubusercontent.com/bjrnptrsn/climate_group_helper/main/assets/icon@2x.png" alt="Climate Group Helper Icon" width="128"/>
-</p>
+## 📋 Panoramica
 
-<p align="center">
-  <a href="https://github.com/hacs/integration"><img src="https://img.shields.io/badge/HACS-Custom-orange.svg" alt="HACS"/></a>
-  <a href="https://github.com/bjrnptrsn/climate_group_helper/releases"><img src="https://img.shields.io/github/v/release/bjrnptrsn/climate_group_helper" alt="Original Release"/></a>
-</p>
+Questo repository contiene la versione modificata del modulo **Climate Group Helper** per Home Assistant con l'aggiunta della feature **Area-Based Window Control**.
 
-> ⚠️ **EXPERIMENTAL FORK - TEST ONLY**  
-> This is a **fork** of the original [bjrnptrsn/climate_group_helper](https://github.com/bjrnptrsn/climate_group_helper) with experimental **Area-Based Window Control** functionality.  
-> **DO NOT USE IN PRODUCTION** - This is for testing purposes only!
+### Cosa Fa
 
-## 🆕 New Features in This Fork
+Permette il controllo granulare dei termostati basato sulle aree: quando una finestra si apre, vengono spenti **solo i termostati nella stessa area**, non tutto il gruppo.
 
-### 🪟 **Area-Based Window Control**
-Revolutionary new window control mode that automatically manages thermostats based on window states **per area**:
+### Versione
 
-- **🏠 Area-Aware**: Each window sensor controls only thermostats in its assigned Home Assistant area
-- **⏱️ Configurable Delays**: Separate delays for window open (15s default) and close (30s default)
-- **🔄 Event-Driven**: Real-time response to window state changes with intelligent timer management
-- **🌐 Multi-Language**: Full Italian translation support with proper UI integration
-- **🔧 Future-Proof**: Uses modern Home Assistant threading patterns (compatible with HA 2025.4+)
-
-### 📋 How Area-Based Control Works
-
-1. **Window Opens** → Timer starts (15s default)
-2. **After delay** → System checks if window still open
-3. **If yes** → Turns OFF all thermostats in the same area
-4. **Window Closes** → Timer starts (30s default)  
-5. **After delay** → Checks if other windows in area are still open
-6. **If no other windows open** → Restores thermostats to group target mode
+- **Base**: Climate Group Helper v0.17.0
+- **Modifica**: Area-Based Window Control
+- **Data**: 2026-01-24
+- **Status**: ✅ Testato e Funzionante
 
 ---
 
-## ✨ Original Features (Unchanged)
+## 📚 Documentazione
 
-### 🎛️ Unified Control
-Change settings on the group, and all member devices update to match. No more managing 5 thermostats individually.
+### Per Iniziare
 
-### 🌡️ Multi-Sensor Aggregation
-Use **multiple external sensors** for temperature and humidity. The group calculates the average (or min/max/median) to get the true room reading—not just what one device thinks.
-*   **Averaging:** Mean, Median, Min, or Max.
-*   **Precision:** Round values to match your device (e.g. 0.5°).
+1. **[QUICK_REFERENCE.md](QUICK_REFERENCE.md)** ⭐ **INIZIA QUI**
+   - Guida rapida per capire le modifiche
+   - Checklist per riapplicare su nuove versioni
+   - Troubleshooting rapido
+   - Log patterns da verificare
 
-### 🔄 Calibration Sync (Write Targets)
-*New in v0.13!* Write the calculated sensor value **back to physical devices** (e.g. `number.thermostat_external_input`). Perfect for TRVs that support external temperature calibration.
+### Documentazione Tecnica
 
-### 🔒 Advanced Sync Modes
-*   **Standard:** Classic one-way control (Group → Members).
-*   **Mirror:** Two-way sync. Change one device, all others follow.
-*   **Lock:** Enforce group state. Reverts manual changes on members.
+2. **[TECHNICAL_DOCUMENTATION.md](TECHNICAL_DOCUMENTATION.md)**
+   - Architettura completa v0.17.0
+   - Spiegazione dettagliata di ogni modifica
+   - Guida al re-merge passo-passo
+   - Test suite completo
+   - Troubleshooting approfondito
 
-### 🎚️ Selective Attribute Sync
-*New in v0.13!* Choose **exactly** which attributes to sync in Lock/Mirror modes. Example: Sync temperature but allow individual fan control.
+3. **[MODIFICATIONS_DIFF.md](MODIFICATIONS_DIFF.md)**
+   - Diff esatti di tutte le modifiche
+   - Confronto linea per linea
+   - Codice completo dei nuovi metodi
+   - Riepilogo modifiche per file
 
-### 🪟 Window Control
-*Redesigned in v0.16!* Automatically turn off heating when windows open and restore it when they close.
+### Documentazione Utente
 
-*   **Logic:** Opening a window forces all members to `off`. Closing the window restores the group's target state (e.g. `heat`).
-*   **Room Sensor:** Fast reaction (default: 15s). For sensors directly in the room. E.g. `binary_sensor.living_room_window`.
-*   **Zone Sensor:** Slow reaction (default: 5min). For whole-house sensors. Prevents heating shutdown in closed rooms when a distant window opens. E.g. `binary_sensor.all_windows_open`.
-*   **User Blocking:** Manual changes are blocked while windows are open.
-*   **Sync Blocking:** Background sync ignores changes during window control.
+4. **[AREA_BASED_WINDOW_CONTROL.md](custom_components/climate_group_helper/AREA_BASED_WINDOW_CONTROL.md)**
+   - Guida utente per configurazione
+   - Esempi d'uso
+   - Requisiti e setup
+   - Debugging
 
-### 📅 Schedule Integration
-*New in v0.16!* Native support for Home Assistant `schedule` entities.
+### Documentazione Merge
 
-*   **Direct Control:** Link a schedule helper to your climate group.
-*   **Intelligent Sync:** The schedule updates the group's target state.
-*   **Window Aware:** If a schedule changes while windows are open, the new target is saved and applied immediately when windows close.
-*   **Format:** Supports `hvac_mode`, `temperature`, `fan_mode`, etc. via schedule variables.
+5. **[README_MERGE.md](README_MERGE.md)**
+   - Istruzioni installazione
+   - Verifica funzionamento
+   - Prossimi passi
 
-#### Schedule Configuration Example
+6. **[MERGE_SUMMARY.md](MERGE_SUMMARY.md)**
+   - Riepilogo tecnico del merge
+   - Dettagli modifiche per file
+   - Testing checklist
 
-1. Create a **Schedule Helper** in Home Assistant (Settings > Devices & Services > Helpers).
-2. Open the schedule and add your time slots.
-3. **Crucial:** You must add **variables** (data) to your schedule slots to tell the group what to do.
+7. **[COMPARISON.md](COMPARISON.md)**
+   - Confronto fork v0.16.1 vs v0.17.0
+   - Differenze architetturali
+   - Vantaggi nuova implementazione
 
-**Example (Edit Schedule as YAML):**
-```yaml
-monday:
-  - from: "06:00:00"
-    to: "08:30:00"
-    data:
-      hvac_mode: "heat"
-      temperature: 21.5
-  - from: "08:30:00"
-    to: "16:00:00"
-    data:
-      hvac_mode: "heat"
-      temperature: 19.0
+8. **[TEST_PLAN.md](TEST_PLAN.md)**
+   - Piano di test completo (12 test case)
+   - Procedure di rollback
+   - Success criteria
+
+---
+
+## 🚀 Quick Start
+
+### Installazione
+
+```bash
+# Backup
+cp -r /root/homeassistant/custom_components/climate_group_helper \
+      /root/climate_group_helper.backup
+
+# Installazione
+cp -r custom_components/climate_group_helper \
+      /root/homeassistant/custom_components/
+
+# Riavvio
+ha core restart
+```
+
+### Configurazione
+
+1. Vai su **Settings > Devices & Services > Helpers**
+2. Trova il tuo **Climate Group Helper**
+3. Click **Configure > Window Control**
+4. Seleziona **Window Mode**: `Area-based`
+5. Seleziona **Window Sensors**: tutte le finestre da monitorare
+6. Configura **Window Open Delay**: 15s (default)
+7. Configura **Close Delay**: 30s (default)
+8. **Save**
+
+**IMPORTANTE**: Assicurati che finestre e termostati siano assegnati alle aree in Home Assistant (Settings > Areas).
+
+### Verifica
+
+```bash
+# Verifica caricamento
+ha core logs | grep "WindowControl initialized"
+# Output atteso: "Mode: area_based"
+
+# Test funzionale
+# 1. Apri finestra → solo termostato area si spegne
+# 2. Chiudi finestra → solo termostato area si riaccende
 ```
 
 ---
 
-## ⚙️ Configuration Options
+## 📁 Struttura Repository
 
-The configuration is organized into a wizard-style flow. Use the **Configure** button on the helper to change these settings.
-
-### Temperature & Humidity Settings
-
-| Option | Description |
-|--------|-------------|
-| **External Sensors** | Select one or more sensors to override member readings. |
-| **Calibration Targets** | Write calculated temperature to number entities. |
-| **Averaging Method** | Mean, Median, Min, or Max—separately for Current and Target values. |
-| **Precision** | Round target values sent to devices (e.g. 0.5° or 1°). |
-
-### HVAC Mode Strategy
-
-| Strategy | Behavior |
-|----------|----------|
-| **Normal** | Group shows most common mode. Only `off` when all are off. |
-| **Off Priority** | Group shows `off` if *any* device is off. |
-| **Auto** | Smart switching between Normal and Off Priority. |
-
-### Feature Strategy
-
-| Strategy | Behavior |
-|----------|----------|
-| **Intersection** | Features (e.g. Fan) supported by *all* devices. Safe mode. |
-| **Union** | Features supported by *any* device. |
-
-### Sync Mode
-
-| Option | Description |
-|--------|-------------|
-| **Sync Mode** | Standard (One-way), Mirror (Two-way), or Lock (Enforced). |
-| **Selective Sync** | Choose which attributes to enforce (e.g. sync temperature but allow local fan control). |
-
-### Window Control
-
-| Option | Description |
-|--------|-------------|
-| **Room Sensor** | Binary sensor for fast reaction (window in the same room). |
-| **Zone Sensor** | Binary sensor for slow reaction (e.g. whole-house "any window open"). |
-| **Room/Zone Delay** | Time before turning off heating (default: 15s / 5min). |
-| **Close Delay** | Time before restoring heating after windows close (default: 30s). |
-
-### Schedule
-
-| Option | Description |
-|--------|-------------|
-| **Schedule Entity** | A Home Assistant `schedule` entity to control the group. |
-
-### Availability & Timings
-
-| Option | Description |
-|--------|-------------|
-| **Debounce Delay** | Wait before sending commands to prevent network congestion (default: 0.5s). |
-| **Retry Attempts** | Number of retries if a command fails. |
-| **Retry Delay** | Time between retries (e.g. 1.0s). |
-
----
-
-## 📦 Installation
-
-### Via HACS (Recommended)
-
-1. Open **HACS** > **Integrations**
-2. Click the **three dots** in the top right corner > **Custom repositories**
-3. Add the URL: `https://github.com/bjrnptrsn/climate_group_helper`
-4. Select **Integration** as the category and click **Add**
-5. Search for **Climate Group Helper** and install it
-6. **Restart Home Assistant**
-
-### Manual
-
-1. Download the [latest release](https://github.com/bjrnptrsn/climate_group_helper/releases)
-2. Copy `custom_components/climate_group_helper` to your `custom_components` folder
-3. **Restart Home Assistant**
-
----
-
-## 🛠️ Setup
-
-1. Go to **Settings** > **Devices & Services** > **Helpers**
-2. Click **+ Create Helper**
-3. Choose **Climate Group Helper**
-4. Enter a name and select your climate entities
-
-**To configure advanced options:**
-1. Find the group in your dashboard or entity list
-2. Click the **⚙️ Settings** icon → **Configure**
-3. Select the configuration category (Members, Temperature, Sync Mode, etc.)
-
----
-
-## 🪟 Configuring Area-Based Window Control
-
-### Prerequisites
-1. **Areas configured** in Home Assistant (Settings → Areas & Labels → Areas)
-2. **Window sensors assigned** to their respective areas
-3. **Thermostats assigned** to their respective areas
-
-### Setup Steps
-
-1. **Create Climate Group** as usual with your thermostats
-2. **Configure Window Control**:
-   - Go to group settings → **Window Control**
-   - Set **Window Control Mode** to **"Area-based Mode"**
-   - Select all window sensors you want to monitor
-   - Configure delays:
-     - **Window Open Delay**: Time to wait before turning off thermostats (default: 15s)
-     - **Close Delay**: Time to wait before restoring thermostats (default: 30s)
-
-### Example Configuration
-
-```yaml
-# Areas in Home Assistant:
-# - studio (Studio)
-# - cameretta (Bedroom)  
-# - bagno (Bathroom)
-
-# Window sensors assigned to areas:
-# - binary_sensor.finestra_studio_contact → studio area
-# - binary_sensor.finestra_cameretta_contact → cameretta area
-# - binary_sensor.finestra_bagno_contact → bagno area
-
-# Thermostats assigned to areas:
-# - climate.termostato_studio → studio area
-# - climate.termostato_cameretta → cameretta area
-# - climate.termostato_bagno → bagno area
 ```
-
-### Behavior Example
-- **Studio window opens** → After 15s → `climate.termostato_studio` turns OFF
-- **Studio window closes** → After 30s → `climate.termostato_studio` restores to group mode (e.g., heat)
-- **Other areas unaffected** by studio window changes
-
-### Debug Logging
-Enable debug logging to monitor window control activity:
-
-```yaml
-logger:
-  default: info
-  logs:
-    custom_components.climate_group_helper.window_control: debug
+climate_group_helper_source/
+├── README.md                           ← Questo file
+├── QUICK_REFERENCE.md                  ← ⭐ Guida rapida
+├── TECHNICAL_DOCUMENTATION.md          ← Documentazione completa
+├── MODIFICATIONS_DIFF.md               ← Diff delle modifiche
+├── README_MERGE.md                     ← Istruzioni installazione
+├── MERGE_SUMMARY.md                    ← Riepilogo merge
+├── COMPARISON.md                       ← Confronto versioni
+├── TEST_PLAN.md                        ← Piano di test
+├── MERGE_COMPLETE.txt                  ← Riepilogo visuale
+└── custom_components/
+    └── climate_group_helper/
+        ├── __init__.py                 (v0.17.0 base)
+        ├── climate.py                  (v0.17.0 base)
+        ├── const.py                    ⚙️ MODIFICATO
+        ├── window_control.py           ⚙️ MODIFICATO
+        ├── service_call.py             ⚙️ MODIFICATO
+        ├── config_flow.py              ⚙️ MODIFICATO
+        ├── strings.json                ⚙️ MODIFICATO
+        ├── state.py                    (v0.17.0 base)
+        ├── sync_mode.py                (v0.17.0 base)
+        ├── schedule.py                 (v0.17.0 base)
+        ├── sensor.py                   (v0.17.0 base)
+        ├── manifest.json               (v0.17.0)
+        └── AREA_BASED_WINDOW_CONTROL.md ← Guida utente
 ```
 
 ---
 
-## ⚠️ Fork Limitations & Warnings
+## 🔧 File Modificati
 
-### 🚨 **EXPERIMENTAL STATUS**
-- This fork contains **experimental features** not present in the original
-- **NOT RECOMMENDED** for production environments
-- May contain bugs or unexpected behavior
-- **No official support** - use at your own risk
+### Core Modifications
 
-### 🔧 **Technical Limitations**
-- Area-based window control requires **Home Assistant Areas** to be properly configured
-- Window sensors and thermostats **must be assigned** to their respective areas
-- Only works with **binary sensors** for window detection (contact sensors, door sensors)
-- **Threading warnings** may appear in logs (using future-compatible patterns)
+| File | Modifiche | Descrizione |
+|------|-----------|-------------|
+| `const.py` | +4 linee | Costanti area-based |
+| `window_control.py` | +200 linee | Logica area-based completa |
+| `service_call.py` | +18 linee | Supporto entity_ids |
+| `config_flow.py` | +70 linee | UI dinamica |
+| `strings.json` | +6 linee | Traduzioni |
 
-### 🔄 **Migration from Original**
-If you want to return to the original version:
-1. Remove this custom integration
-2. Install the original from HACS
-3. Reconfigure your groups (settings may not transfer)
+**Totale**: ~300 linee di codice
+
+### File Non Modificati
+
+Tutti gli altri file sono identici alla versione v0.17.0 base:
+- `__init__.py`, `climate.py`, `state.py`, `sync_mode.py`, `schedule.py`, `sensor.py`
 
 ---
 
-## 🔍 Troubleshooting
+## 🎯 Funzionalità
 
-**Issues after updating?**
-If you experience strange behavior after an update (e.g. settings not saving), try re-creating the group. This resolves potential migration issues.
+### Area-Based Mode
 
-To see more details, enable debug logging by adding the following to your `configuration.yaml` file:
+- ✅ Controllo granulare per area
+- ✅ Rilevamento automatico aree via registry
+- ✅ Gestione finestre multiple per area
+- ✅ Gestione finestre multiple in aree diverse
+- ✅ Delay configurabili (apertura/chiusura)
+- ✅ Ripristino intelligente
 
-```yaml
+### Legacy Mode
+
+- ✅ Modalità room/zone preservata
+- ✅ Backward compatibility completa
+- ✅ Nessuna breaking change
+
+### Integrazione v0.17.0
+
+- ✅ Usa nuovo sistema TargetState
+- ✅ Compatibile con CallHandler architecture
+- ✅ Source-aware state management
+- ✅ Context tracking automatico
+- ✅ Retry logic e debouncing
+
+---
+
+## 🧪 Testing
+
+### Test Completato
+
+**Data**: 2026-01-24 19:58  
+**Ambiente**: Home Assistant 2026.1.2
+
+**Timeline Test:**
+```
+19:57:02 - Finestra studio aperta
+19:57:17 - Termostato studio spento (dopo 15s)
+19:58:25 - Finestra studio chiusa
+19:58:56 - Termostato studio ripristinato (dopo 30s)
+```
+
+**Risultato**: ✅ Funzionamento perfetto
+
+### Test Suite
+
+Vedi [TEST_PLAN.md](TEST_PLAN.md) per:
+- 12 test case completi
+- Performance tests
+- Rollback procedure
+- Success criteria
+
+---
+
+## 🐛 Troubleshooting
+
+### Problemi Comuni
+
+| Problema | Soluzione |
+|----------|-----------|
+| Climate group non si carica | Verifica sintassi Python, controlla log errori |
+| WindowControl non inizializza | Verifica mode = "area_based" e sensori configurati |
+| Finestra aperta ma niente succede | Verifica sensore funziona e area configurata |
+| Termostato non si riaccende | Verifica altre finestre chiuse e target mode |
+| Tutti termostati si spengono | Verifica mode = "area_based" (non "on") |
+
+Vedi [QUICK_REFERENCE.md](QUICK_REFERENCE.md#-troubleshooting-rapido) per dettagli.
+
+---
+
+## 🔄 Re-Merge su Nuova Versione
+
+### Quando Necessario
+
+- Nuova versione upstream (es. v0.18.0)
+- Bugfix critici da integrare
+- Nuove feature da mantenere
+
+### Processo
+
+1. **Analisi**: Confronta file chiave con nuova versione
+2. **Verifica**: Controlla compatibilità architetturale
+3. **Applica**: Riapplica modifiche (vedi QUICK_REFERENCE.md)
+4. **Test**: Verifica funzionamento completo
+
+Vedi [TECHNICAL_DOCUMENTATION.md](TECHNICAL_DOCUMENTATION.md#guida-al-re-merge) per guida completa.
+
+---
+
+## 📊 Log Patterns
+
+### Funzionamento Corretto
+
+```
+DEBUG [...] WindowControl initialized. Mode: area_based
+DEBUG [...] Window binary_sensor.finestra_X opened, scheduling turn off in 15.0s
+INFO  [...] Window ... opened in area 'Y', turning off: ['climate.termo_Y']
+DEBUG [...] Window ... closed, scheduling restore check in 30.0s
+INFO  [...] Window ... closed, restoring area 'Y': ['climate.termo_Y']
+```
+
+### Debug
+
+```bash
+# Abilita debug logging in configuration.yaml
 logger:
   default: info
   logs:
     custom_components.climate_group_helper: debug
+
+# Monitora log
+ha core logs --follow | grep climate_group_helper
 ```
 
 ---
 
-## ❤️ Contributing & Credits
+## 🔑 Punti Chiave
 
-### Original Project
-This fork is based on the excellent work by **bjrnptrsn**:
-- **Original Repository**: [bjrnptrsn/climate_group_helper](https://github.com/bjrnptrsn/climate_group_helper)
-- **Original Author**: [@bjrnptrsn](https://github.com/bjrnptrsn)
+### Differenze Architetturali v0.16.1 → v0.17.0
 
-### Fork Contributions
-- **Area-Based Window Control**: Complete implementation with area-aware thermostat management
-- **Italian Translations**: Full UI translation support
-- **Future-Proof Threading**: Compatible with Home Assistant 2025.4+
-- **Enhanced Documentation**: Comprehensive setup and configuration guides
+| Aspetto | v0.16.1 | v0.17.0 |
+|---------|---------|---------|
+| Chiamate servizi | `hass.services.async_call()` | `call_handler.call_immediate()` |
+| Stato | `_group.hvac_mode` | `target_state.hvac_mode` |
+| Accesso hass | `_group.hass` | `_hass` |
+| Targeting | Loop manuale | `entity_ids` parameter |
 
-### Bug Reports
-- **Original features**: Report to [original repository](https://github.com/bjrnptrsn/climate_group_helper/issues)
-- **Fork-specific features**: This is experimental code - no official support provided
+### Codice Chiave
+
+```python
+# ✅ CORRETTO (v0.17.0)
+await self.call_handler.call_immediate(
+    {"hvac_mode": HVACMode.OFF}, 
+    entity_ids=["climate.termo1"]
+)
+
+if self.target_state.hvac_mode == HVACMode.OFF:
+    return
+
+state = self._hass.states.get(entity_id)
+```
 
 ---
 
-## 📄 License
+## 📞 Supporto
 
-MIT License (same as original project)
+### Documentazione
 
-**Disclaimer**: This fork is provided "as-is" without warranty. The original author is not responsible for any issues arising from this experimental fork.
+- **Quick Start**: [QUICK_REFERENCE.md](QUICK_REFERENCE.md)
+- **Tecnica**: [TECHNICAL_DOCUMENTATION.md](TECHNICAL_DOCUMENTATION.md)
+- **Diff**: [MODIFICATIONS_DIFF.md](MODIFICATIONS_DIFF.md)
+
+### Repository
+
+- **Upstream**: https://github.com/bjrnptrsn/climate_group_helper
+- **Versione Base**: 0.17.0
+- **Custom Feature**: Area-Based Window Control
+
+---
+
+## 📝 Changelog
+
+### 2026-01-24 - v0.17.0 + Area-Based
+
+- ✅ Merge completato su architettura v0.17.0
+- ✅ Area-based window control integrato
+- ✅ Backward compatibility preservata
+- ✅ Test completati con successo
+- ✅ Documentazione completa creata
+- ✅ Codice commentato inline
+
+---
+
+## 📄 Licenza
+
+Stesso della versione upstream (Climate Group Helper).
+
+---
+
+## 🙏 Credits
+
+- **Climate Group Helper**: bjrnptrsn
+- **Area-Based Feature**: Custom modification
+- **Merge v0.17.0**: 2026-01-24
+
+---
+
+**Ultima Modifica**: 2026-01-24  
+**Versione**: 0.17.0 + Area-Based Window Control  
+**Status**: ✅ Produzione

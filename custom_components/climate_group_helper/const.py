@@ -68,8 +68,8 @@ CONF_ZONE_SENSOR = "zone_sensor"
 CONF_ROOM_OPEN_DELAY = "room_open_delay"
 CONF_ZONE_OPEN_DELAY = "zone_open_delay"
 CONF_CLOSE_DELAY = "close_delay"
-CONF_WINDOW_SENSORS = "window_sensors"  # New: list of window sensors
-CONF_WINDOW_OPEN_DELAY = "window_open_delay"  # New: delay before turning off
+CONF_WINDOW_SENSORS = "window_sensors"
+CONF_WINDOW_OPEN_DELAY = "window_open_delay"
 DEFAULT_ROOM_OPEN_DELAY = 15
 DEFAULT_ZONE_OPEN_DELAY = 300
 DEFAULT_CLOSE_DELAY = 30
@@ -82,6 +82,7 @@ CONF_SCHEDULE_ENTITY = "schedule_entity"
 CONF_IGNORE_OFF_MEMBERS = "ignore_off_members"
 CONF_EXPOSE_SMART_SENSORS = "expose_smart_sensors"
 CONF_EXPOSE_MEMBER_ENTITIES = "expose_member_entities"
+CONF_MIN_TEMP_OFF = "min_temp_off"
 
 
 class AverageOption(StrEnum):
@@ -114,7 +115,7 @@ class WindowControlMode(StrEnum):
 
     OFF = "off"
     ON = "on"
-    AREA_BASED = "area_based"  # New: area-based control
+    AREA_BASED = "area_based"
 
 
 # Extra attribute keys
