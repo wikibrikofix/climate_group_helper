@@ -1,166 +1,174 @@
-# Indice Documentazione - Area-Based Window Control
+# Documentation Index - Area-Based Window Control
 
-## 🚀 Inizio Rapido
+## 🚀 Quick Start
 
-**Sei uno sviluppatore che deve capire/modificare il codice?**
-→ Inizia da: [QUICK_REFERENCE.md](QUICK_REFERENCE.md) (10 minuti)
+**Are you a developer who needs to understand/modify the code?**
+→ Start here: [QUICK_REFERENCE.md](QUICK_REFERENCE.md) (10 minutes)
 
-**Devi riapplicare le modifiche su una nuova versione?**
-→ Segui: [QUICK_REFERENCE.md](QUICK_REFERENCE.md) sezione "Come Riapplicare" + [MODIFICATIONS_DIFF.md](MODIFICATIONS_DIFF.md)
+**Need to reapply modifications to a new version?**
+→ Follow: [QUICK_REFERENCE.md](QUICK_REFERENCE.md) section "How to Reapply" + [MODIFICATIONS_DIFF.md](MODIFICATIONS_DIFF.md)
 
-**Sei un utente finale che deve configurare?**
-→ Leggi: [AREA_BASED_WINDOW_CONTROL.md](custom_components/climate_group_helper/AREA_BASED_WINDOW_CONTROL.md)
-
----
-
-## 📚 Documentazione Completa
-
-### Per Sviluppatori
-
-| File | Scopo | Tempo Lettura |
-|------|-------|---------------|
-| [QUICK_REFERENCE.md](QUICK_REFERENCE.md) ⭐⭐⭐ | Guida rapida, checklist, troubleshooting | 10 min |
-| [TECHNICAL_DOCUMENTATION.md](TECHNICAL_DOCUMENTATION.md) | Architettura, guida re-merge, test suite | 60 min |
-| [MODIFICATIONS_DIFF.md](MODIFICATIONS_DIFF.md) | Diff esatti, codice completo | 30 min |
-| [COMPARISON.md](COMPARISON.md) | Confronto v0.16.1 vs v0.17.0 | 20 min |
-
-### Per Utenti
-
-| File | Scopo | Tempo Lettura |
-|------|-------|---------------|
-| [AREA_BASED_WINDOW_CONTROL.md](custom_components/climate_group_helper/AREA_BASED_WINDOW_CONTROL.md) | Configurazione, esempi, debugging | 10 min |
-| [README_MERGE.md](README_MERGE.md) | Istruzioni installazione | 5 min |
-
-### Documentazione di Supporto
-
-| File | Scopo |
-|------|-------|
-| [README.md](README.md) | Panoramica generale progetto |
-| [MERGE_SUMMARY.md](MERGE_SUMMARY.md) | Riepilogo tecnico merge |
-| [TEST_PLAN.md](TEST_PLAN.md) | Piano test completo (12 test case) |
+**Are you an end user who needs to configure?**
+→ Read: [AREA_BASED_WINDOW_CONTROL.md](custom_components/climate_group_helper/AREA_BASED_WINDOW_CONTROL.md)
 
 ---
 
-## 🎯 Scenari d'Uso
+## 📚 Complete Documentation
 
-### Scenario 1: Prima Volta - Capire il Progetto
+### For Developers
+
+| File | Purpose | Reading Time |
+|------|---------|--------------|
+| [QUICK_REFERENCE.md](QUICK_REFERENCE.md) ⭐⭐⭐ | Quick guide, checklist, troubleshooting | 10 min |
+| [TECHNICAL_DOCUMENTATION.md](TECHNICAL_DOCUMENTATION.md) | Architecture, re-merge guide, test suite | 60 min |
+| [MODIFICATIONS_DIFF.md](MODIFICATIONS_DIFF.md) | Exact diffs, complete code | 30 min |
+| [COMPARISON.md](COMPARISON.md) | Comparison v0.16.1 vs v0.17.0 | 20 min |
+
+### For Users
+
+| File | Purpose | Reading Time |
+|------|---------|--------------|
+| [AREA_BASED_WINDOW_CONTROL.md](custom_components/climate_group_helper/AREA_BASED_WINDOW_CONTROL.md) | Configuration, examples, debugging | 10 min |
+| [README_MERGE.md](README_MERGE.md) | Installation instructions | 5 min |
+
+### Supporting Documentation
+
+| File | Purpose |
+|------|---------|
+| [README.md](README.md) | General project overview |
+| [MERGE_SUMMARY.md](MERGE_SUMMARY.md) | Technical merge summary |
+| [TEST_PLAN.md](TEST_PLAN.md) | Complete test plan (12 test cases) |
+
+---
+
+## 🎯 Use Case Scenarios
+
+### Scenario 1: First Time - Understanding the Project
 ```
-1. Leggi README.md (5 min)
-2. Leggi QUICK_REFERENCE.md (10 min)
-3. Guarda MODIFICATIONS_DIFF.md per vedere il codice (15 min)
-Totale: 30 minuti
+1. Read README.md (5 min)
+2. Read QUICK_REFERENCE.md (10 min)
+3. Check MODIFICATIONS_DIFF.md for code (15 min)
+Total: 30 minutes
 ```
 
-### Scenario 2: Devo Fare un Re-Merge
+### Scenario 2: Need to Re-Merge
 ```
-1. Scarica nuova versione upstream
-2. Segui QUICK_REFERENCE.md sezione "Come Riapplicare" (20 min)
-3. Usa MODIFICATIONS_DIFF.md per codice esatto (30 min)
-4. Testa con TEST_PLAN.md (30 min)
-Totale: 80 minuti
-```
-
-### Scenario 3: Ho un Problema
-```
-1. Consulta QUICK_REFERENCE.md sezione "Troubleshooting" (5 min)
-2. Se serve più dettagli: TECHNICAL_DOCUMENTATION.md (10 min)
-Totale: 15 minuti
+1. Download new upstream version
+2. Follow QUICK_REFERENCE.md section "How to Reapply" (20 min)
+3. Use MODIFICATIONS_DIFF.md for exact code (30 min)
+4. Test with TEST_PLAN.md (30 min)
+Total: 80 minutes
 ```
 
-### Scenario 4: Voglio Capire l'Architettura
+### Scenario 3: Having a Problem
 ```
-1. Leggi TECHNICAL_DOCUMENTATION.md sezione "Architettura" (30 min)
-2. Leggi COMPARISON.md per differenze (20 min)
-3. Studia MODIFICATIONS_DIFF.md per implementazione (30 min)
-Totale: 80 minuti
+1. Check QUICK_REFERENCE.md section "Troubleshooting" (5 min)
+2. If more details needed: TECHNICAL_DOCUMENTATION.md (10 min)
+Total: 15 minutes
+```
+
+### Scenario 4: Want to Understand Architecture
+```
+1. Read TECHNICAL_DOCUMENTATION.md section "Architecture" (30 min)
+2. Read COMPARISON.md for differences (20 min)
+3. Study MODIFICATIONS_DIFF.md for implementation (30 min)
+Total: 80 minutes
 ```
 
 ---
 
-## 📊 Statistiche
+## 📊 Statistics
 
-- **Totale File Documentazione**: 9 file
-- **Totale Righe Documentazione**: ~4,000 righe
-- **Totale Righe Codice Modificato**: ~300 righe
-- **File Codice Modificati**: 5 file
-- **Tempo Lettura Completa**: ~3 ore
-- **Tempo Quick Start**: ~10 minuti
+- **Total Documentation Files**: 9 files
+- **Total Documentation Lines**: ~4,000 lines
+- **Total Modified Code Lines**: ~300 lines
+- **Modified Code Files**: 5 files
+- **Complete Reading Time**: ~3 hours
+- **Quick Start Time**: ~10 minutes
 
 ---
 
-## 🗂️ Struttura Repository
+## 🗂️ Repository Structure
 
 ```
-climate_group_helper_source/
-├── INDEX.md                            ← Questo file
-├── README.md                           ← Panoramica generale
-├── QUICK_REFERENCE.md                  ← ⭐ Inizia qui
-├── TECHNICAL_DOCUMENTATION.md          ← Documentazione completa
-├── MODIFICATIONS_DIFF.md               ← Diff del codice
-├── COMPARISON.md                       ← Confronto versioni
-├── README_MERGE.md                     ← Istruzioni installazione
-├── MERGE_SUMMARY.md                    ← Riepilogo merge
-├── TEST_PLAN.md                        ← Piano test
+climate_group_helper/
+├── INDEX.md                            ← This file
+├── README.md                           ← General overview
+├── QUICK_REFERENCE.md                  ← ⭐ Start here
+├── TECHNICAL_DOCUMENTATION.md          ← Complete documentation
+├── MODIFICATIONS_DIFF.md               ← Code diffs
+├── COMPARISON.md                       ← Version comparison
+├── README_MERGE.md                     ← Installation instructions
+├── MERGE_SUMMARY.md                    ← Merge summary
+├── TEST_PLAN.md                        ← Test plan
+├── docs_ita/                           ← Italian documentation
 └── custom_components/
     └── climate_group_helper/
-        ├── window_control.py           ← ⚙️ Modificato
-        ├── service_call.py             ← ⚙️ Modificato
-        ├── config_flow.py              ← ⚙️ Modificato
-        ├── const.py                    ← ⚙️ Modificato
-        ├── strings.json                ← ⚙️ Modificato
-        ├── AREA_BASED_WINDOW_CONTROL.md ← Guida utente
-        └── [altri file v0.17.0 base]
+        ├── window_control.py           ← ⚙️ Modified
+        ├── service_call.py             ← ⚙️ Modified
+        ├── config_flow.py              ← ⚙️ Modified
+        ├── const.py                    ← ⚙️ Modified
+        ├── strings.json                ← ⚙️ Modified
+        ├── AREA_BASED_WINDOW_CONTROL.md ← User guide
+        └── [other v0.17.0 base files]
 ```
 
 ---
 
-## 🔍 Ricerca Rapida
+## 🔍 Quick Search
 
-### Cercare Informazioni
+### Search Information
 
 ```bash
-# Cerca in tutta la documentazione
-cd /root/homeassistant/repos/climate_group_helper_source
-grep -r "termine_da_cercare" *.md
+# Search all documentation
+cd /root/homeassistant/repos/climate_group_helper_fork
+grep -r "search_term" *.md
 
-# Esempi:
+# Examples:
 grep -r "area-based" *.md
 grep -r "call_handler" *.md
 grep -r "troubleshooting" *.md
 ```
 
-### Comandi Utili
+### Useful Commands
 
 ```bash
-# Lista tutti i file markdown
+# List all markdown files
 ls -lh *.md
 
-# Conta righe documentazione
+# Count documentation lines
 wc -l *.md
 
-# Visualizza file specifico
+# View specific file
 cat QUICK_REFERENCE.md | less
 ```
 
 ---
 
-## 📞 Riferimenti Rapidi
+## 📞 Quick References
 
-### Versioni
+### Versions
 - **Base**: Climate Group Helper v0.17.0
-- **Modifica**: Area-Based Window Control
-- **Data**: 2026-01-24
+- **Modification**: Area-Based Window Control
+- **Date**: 2026-01-24
 
-### Percorsi Importanti
-- **Documentazione**: `/root/homeassistant/repos/climate_group_helper_source/`
-- **Codice Installato**: `/root/homeassistant/custom_components/climate_group_helper/`
+### Important Paths
+- **Documentation**: `/root/homeassistant/repos/climate_group_helper_fork/`
+- **Installed Code**: `/root/homeassistant/custom_components/climate_group_helper/`
 - **Backup**: `/root/climate_group_helper.backup`
 
-### Link Utili
-- **Repository Upstream**: https://github.com/bjrnptrsn/climate_group_helper
-- **Riepilogo Completo**: `/root/DOCUMENTAZIONE_COMPLETA.txt`
+### Useful Links
+- **Upstream Repository**: https://github.com/bjrnptrsn/climate_group_helper
+- **Complete Summary**: `/root/DOCUMENTAZIONE_COMPLETA.txt`
 
 ---
 
-**Ultima Modifica**: 2026-01-24  
-**Status**: ✅ Completo e Testato
+**Last Modified**: 2026-01-24  
+**Status**: ✅ Complete and Tested
+
+---
+
+## 🌍 Languages
+
+- **English**: Current documentation (root directory)
+- **Italian**: [docs_ita/](docs_ita/) directory

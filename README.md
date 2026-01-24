@@ -1,310 +1,312 @@
 # Climate Group Helper - Area-Based Window Control
 
-## 📋 Panoramica
+## 📋 Overview
 
-Questo repository contiene la versione modificata del modulo **Climate Group Helper** per Home Assistant con l'aggiunta della feature **Area-Based Window Control**.
+This repository contains a modified version of the **Climate Group Helper** module for Home Assistant with the addition of the **Area-Based Window Control** feature.
 
-### Cosa Fa
+### What It Does
 
-Permette il controllo granulare dei termostati basato sulle aree: quando una finestra si apre, vengono spenti **solo i termostati nella stessa area**, non tutto il gruppo.
+Enables granular thermostat control based on areas: when a window opens, only thermostats **in the same area** are turned off, not the entire group.
 
-### Versione
+### Version
 
 - **Base**: Climate Group Helper v0.17.0
-- **Modifica**: Area-Based Window Control
-- **Data**: 2026-01-24
-- **Status**: ✅ Testato e Funzionante
+- **Modification**: Area-Based Window Control
+- **Date**: 2026-01-24
+- **Status**: ✅ Tested and Working
 
 ---
 
-## 📚 Documentazione
+## 📚 Documentation
 
-### Per Iniziare
+### Getting Started
 
-1. **[QUICK_REFERENCE.md](QUICK_REFERENCE.md)** ⭐ **INIZIA QUI**
-   - Guida rapida per capire le modifiche
-   - Checklist per riapplicare su nuove versioni
-   - Troubleshooting rapido
-   - Log patterns da verificare
+1. **[QUICK_REFERENCE.md](QUICK_REFERENCE.md)** ⭐ **START HERE**
+   - Quick guide to understand modifications
+   - Checklist to reapply on new versions
+   - Quick troubleshooting
+   - Log patterns to verify
 
-### Documentazione Tecnica
+### Technical Documentation
 
 2. **[TECHNICAL_DOCUMENTATION.md](TECHNICAL_DOCUMENTATION.md)**
-   - Architettura completa v0.17.0
-   - Spiegazione dettagliata di ogni modifica
-   - Guida al re-merge passo-passo
-   - Test suite completo
-   - Troubleshooting approfondito
+   - Complete v0.17.0 architecture
+   - Detailed explanation of each modification
+   - Step-by-step re-merge guide
+   - Complete test suite
+   - In-depth troubleshooting
 
 3. **[MODIFICATIONS_DIFF.md](MODIFICATIONS_DIFF.md)**
-   - Diff esatti di tutte le modifiche
-   - Confronto linea per linea
-   - Codice completo dei nuovi metodi
-   - Riepilogo modifiche per file
+   - Exact diffs of all modifications
+   - Line-by-line comparison
+   - Complete code of new methods
+   - Summary of changes per file
 
-### Documentazione Utente
+### User Documentation
 
 4. **[AREA_BASED_WINDOW_CONTROL.md](custom_components/climate_group_helper/AREA_BASED_WINDOW_CONTROL.md)**
-   - Guida utente per configurazione
-   - Esempi d'uso
-   - Requisiti e setup
+   - User guide for configuration
+   - Usage examples
+   - Requirements and setup
    - Debugging
 
-### Documentazione Merge
+### Merge Documentation
 
 5. **[README_MERGE.md](README_MERGE.md)**
-   - Istruzioni installazione
-   - Verifica funzionamento
-   - Prossimi passi
+   - Installation instructions
+   - Operation verification
+   - Next steps
 
 6. **[MERGE_SUMMARY.md](MERGE_SUMMARY.md)**
-   - Riepilogo tecnico del merge
-   - Dettagli modifiche per file
+   - Technical merge summary
+   - Details of changes per file
    - Testing checklist
 
 7. **[COMPARISON.md](COMPARISON.md)**
-   - Confronto fork v0.16.1 vs v0.17.0
-   - Differenze architetturali
-   - Vantaggi nuova implementazione
+   - Comparison fork v0.16.1 vs v0.17.0
+   - Architectural differences
+   - Advantages of new implementation
 
 8. **[TEST_PLAN.md](TEST_PLAN.md)**
-   - Piano di test completo (12 test case)
-   - Procedure di rollback
+   - Complete test plan (12 test cases)
+   - Performance tests
+   - Rollback procedures
    - Success criteria
 
 ---
 
 ## 🚀 Quick Start
 
-### Installazione
+### Installation
 
 ```bash
 # Backup
 cp -r /root/homeassistant/custom_components/climate_group_helper \
       /root/climate_group_helper.backup
 
-# Installazione
+# Installation
 cp -r custom_components/climate_group_helper \
       /root/homeassistant/custom_components/
 
-# Riavvio
+# Restart
 ha core restart
 ```
 
-### Configurazione
+### Configuration
 
-1. Vai su **Settings > Devices & Services > Helpers**
-2. Trova il tuo **Climate Group Helper**
+1. Go to **Settings > Devices & Services > Helpers**
+2. Find your **Climate Group Helper**
 3. Click **Configure > Window Control**
-4. Seleziona **Window Mode**: `Area-based`
-5. Seleziona **Window Sensors**: tutte le finestre da monitorare
-6. Configura **Window Open Delay**: 15s (default)
-7. Configura **Close Delay**: 30s (default)
+4. Select **Window Mode**: `Area-based`
+5. Select **Window Sensors**: all windows to monitor
+6. Configure **Window Open Delay**: 15s (default)
+7. Configure **Close Delay**: 30s (default)
 8. **Save**
 
-**IMPORTANTE**: Assicurati che finestre e termostati siano assegnati alle aree in Home Assistant (Settings > Areas).
+**IMPORTANT**: Make sure windows and thermostats are assigned to areas in Home Assistant (Settings > Areas).
 
-### Verifica
+### Verification
 
 ```bash
-# Verifica caricamento
+# Verify loading
 ha core logs | grep "WindowControl initialized"
-# Output atteso: "Mode: area_based"
+# Expected output: "Mode: area_based"
 
-# Test funzionale
-# 1. Apri finestra → solo termostato area si spegne
-# 2. Chiudi finestra → solo termostato area si riaccende
+# Functional test
+# 1. Open window → only area thermostat turns off
+# 2. Close window → only area thermostat turns back on
 ```
 
 ---
 
-## 📁 Struttura Repository
+## 📁 Repository Structure
 
 ```
-climate_group_helper_source/
-├── README.md                           ← Questo file
-├── QUICK_REFERENCE.md                  ← ⭐ Guida rapida
-├── TECHNICAL_DOCUMENTATION.md          ← Documentazione completa
-├── MODIFICATIONS_DIFF.md               ← Diff delle modifiche
-├── README_MERGE.md                     ← Istruzioni installazione
-├── MERGE_SUMMARY.md                    ← Riepilogo merge
-├── COMPARISON.md                       ← Confronto versioni
-├── TEST_PLAN.md                        ← Piano di test
-├── MERGE_COMPLETE.txt                  ← Riepilogo visuale
+climate_group_helper/
+├── README.md                           ← This file
+├── INDEX.md                            ← Quick navigation
+├── QUICK_REFERENCE.md                  ← ⭐ Quick guide
+├── TECHNICAL_DOCUMENTATION.md          ← Complete documentation
+├── MODIFICATIONS_DIFF.md               ← Code diffs
+├── COMPARISON.md                       ← Version comparison
+├── README_MERGE.md                     ← Installation instructions
+├── MERGE_SUMMARY.md                    ← Merge summary
+├── TEST_PLAN.md                        ← Test plan
+├── docs_ita/                           ← Italian documentation
 └── custom_components/
     └── climate_group_helper/
         ├── __init__.py                 (v0.17.0 base)
         ├── climate.py                  (v0.17.0 base)
-        ├── const.py                    ⚙️ MODIFICATO
-        ├── window_control.py           ⚙️ MODIFICATO
-        ├── service_call.py             ⚙️ MODIFICATO
-        ├── config_flow.py              ⚙️ MODIFICATO
-        ├── strings.json                ⚙️ MODIFICATO
+        ├── const.py                    ⚙️ MODIFIED
+        ├── window_control.py           ⚙️ MODIFIED
+        ├── service_call.py             ⚙️ MODIFIED
+        ├── config_flow.py              ⚙️ MODIFIED
+        ├── strings.json                ⚙️ MODIFIED
         ├── state.py                    (v0.17.0 base)
         ├── sync_mode.py                (v0.17.0 base)
         ├── schedule.py                 (v0.17.0 base)
         ├── sensor.py                   (v0.17.0 base)
         ├── manifest.json               (v0.17.0)
-        └── AREA_BASED_WINDOW_CONTROL.md ← Guida utente
+        └── AREA_BASED_WINDOW_CONTROL.md ← User guide
 ```
 
 ---
 
-## 🔧 File Modificati
+## 🔧 Modified Files
 
 ### Core Modifications
 
-| File | Modifiche | Descrizione |
-|------|-----------|-------------|
-| `const.py` | +4 linee | Costanti area-based |
-| `window_control.py` | +200 linee | Logica area-based completa |
-| `service_call.py` | +18 linee | Supporto entity_ids |
-| `config_flow.py` | +70 linee | UI dinamica |
-| `strings.json` | +6 linee | Traduzioni |
+| File | Changes | Description |
+|------|---------|-------------|
+| `const.py` | +4 lines | Area-based constants |
+| `window_control.py` | +200 lines | Complete area-based logic |
+| `service_call.py` | +18 lines | entity_ids support |
+| `config_flow.py` | +70 lines | Dynamic UI |
+| `strings.json` | +6 lines | Translations |
 
-**Totale**: ~300 linee di codice
+**Total**: ~300 lines of code
 
-### File Non Modificati
+### Unmodified Files
 
-Tutti gli altri file sono identici alla versione v0.17.0 base:
+All other files are identical to v0.17.0 base:
 - `__init__.py`, `climate.py`, `state.py`, `sync_mode.py`, `schedule.py`, `sensor.py`
 
 ---
 
-## 🎯 Funzionalità
+## 🎯 Features
 
 ### Area-Based Mode
 
-- ✅ Controllo granulare per area
-- ✅ Rilevamento automatico aree via registry
-- ✅ Gestione finestre multiple per area
-- ✅ Gestione finestre multiple in aree diverse
-- ✅ Delay configurabili (apertura/chiusura)
-- ✅ Ripristino intelligente
+- ✅ Granular control per area
+- ✅ Automatic area detection via registry
+- ✅ Multiple windows per area management
+- ✅ Multiple windows in different areas management
+- ✅ Configurable delays (open/close)
+- ✅ Smart restoration
 
 ### Legacy Mode
 
-- ✅ Modalità room/zone preservata
-- ✅ Backward compatibility completa
-- ✅ Nessuna breaking change
+- ✅ Room/zone mode preserved
+- ✅ Complete backward compatibility
+- ✅ No breaking changes
 
-### Integrazione v0.17.0
+### v0.17.0 Integration
 
-- ✅ Usa nuovo sistema TargetState
-- ✅ Compatibile con CallHandler architecture
+- ✅ Uses new TargetState system
+- ✅ Compatible with CallHandler architecture
 - ✅ Source-aware state management
-- ✅ Context tracking automatico
-- ✅ Retry logic e debouncing
+- ✅ Automatic context tracking
+- ✅ Retry logic and debouncing
 
 ---
 
 ## 🧪 Testing
 
-### Test Completato
+### Test Completed
 
-**Data**: 2026-01-24 19:58  
-**Ambiente**: Home Assistant 2026.1.2
+**Date**: 2026-01-24 19:58  
+**Environment**: Home Assistant 2026.1.2
 
-**Timeline Test:**
+**Test Timeline:**
 ```
-19:57:02 - Finestra studio aperta
-19:57:17 - Termostato studio spento (dopo 15s)
-19:58:25 - Finestra studio chiusa
-19:58:56 - Termostato studio ripristinato (dopo 30s)
+19:57:02 - Studio window opened
+19:57:17 - Studio thermostat turned off (after 15s)
+19:58:25 - Studio window closed
+19:58:56 - Studio thermostat restored (after 30s)
 ```
 
-**Risultato**: ✅ Funzionamento perfetto
+**Result**: ✅ Perfect operation
 
 ### Test Suite
 
-Vedi [TEST_PLAN.md](TEST_PLAN.md) per:
-- 12 test case completi
+See [TEST_PLAN.md](TEST_PLAN.md) for:
+- 12 complete test cases
 - Performance tests
-- Rollback procedure
+- Rollback procedures
 - Success criteria
 
 ---
 
 ## 🐛 Troubleshooting
 
-### Problemi Comuni
+### Common Problems
 
-| Problema | Soluzione |
-|----------|-----------|
-| Climate group non si carica | Verifica sintassi Python, controlla log errori |
-| WindowControl non inizializza | Verifica mode = "area_based" e sensori configurati |
-| Finestra aperta ma niente succede | Verifica sensore funziona e area configurata |
-| Termostato non si riaccende | Verifica altre finestre chiuse e target mode |
-| Tutti termostati si spengono | Verifica mode = "area_based" (non "on") |
+| Problem | Solution |
+|---------|----------|
+| Climate group not loading | Check Python syntax, check error logs |
+| WindowControl not initializing | Check mode = "area_based" and sensors configured |
+| Window opens but nothing happens | Check sensor works and area configured |
+| Thermostat doesn't turn back on | Check other windows closed and target mode |
+| All thermostats turn off | Check mode = "area_based" (not "on") |
 
-Vedi [QUICK_REFERENCE.md](QUICK_REFERENCE.md#-troubleshooting-rapido) per dettagli.
+See [QUICK_REFERENCE.md](QUICK_REFERENCE.md#-quick-troubleshooting) for details.
 
 ---
 
-## 🔄 Re-Merge su Nuova Versione
+## 🔄 Re-Merge on New Version
 
-### Quando Necessario
+### When Needed
 
-- Nuova versione upstream (es. v0.18.0)
-- Bugfix critici da integrare
-- Nuove feature da mantenere
+- New upstream version (e.g. v0.18.0)
+- Critical bugfixes to integrate
+- New features to maintain
 
-### Processo
+### Process
 
-1. **Analisi**: Confronta file chiave con nuova versione
-2. **Verifica**: Controlla compatibilità architetturale
-3. **Applica**: Riapplica modifiche (vedi QUICK_REFERENCE.md)
-4. **Test**: Verifica funzionamento completo
+1. **Analysis**: Compare key files with new version
+2. **Verification**: Check architectural compatibility
+3. **Apply**: Reapply modifications (see QUICK_REFERENCE.md)
+4. **Test**: Verify complete operation
 
-Vedi [TECHNICAL_DOCUMENTATION.md](TECHNICAL_DOCUMENTATION.md#guida-al-re-merge) per guida completa.
+See [TECHNICAL_DOCUMENTATION.md](TECHNICAL_DOCUMENTATION.md#guida-al-re-merge) for complete guide.
 
 ---
 
 ## 📊 Log Patterns
 
-### Funzionamento Corretto
+### Correct Operation
 
 ```
 DEBUG [...] WindowControl initialized. Mode: area_based
-DEBUG [...] Window binary_sensor.finestra_X opened, scheduling turn off in 15.0s
-INFO  [...] Window ... opened in area 'Y', turning off: ['climate.termo_Y']
+DEBUG [...] Window binary_sensor.window_X opened, scheduling turn off in 15.0s
+INFO  [...] Window ... opened in area 'Y', turning off: ['climate.thermo_Y']
 DEBUG [...] Window ... closed, scheduling restore check in 30.0s
-INFO  [...] Window ... closed, restoring area 'Y': ['climate.termo_Y']
+INFO  [...] Window ... closed, restoring area 'Y': ['climate.thermo_Y']
 ```
 
 ### Debug
 
 ```bash
-# Abilita debug logging in configuration.yaml
+# Enable debug logging in configuration.yaml
 logger:
   default: info
   logs:
     custom_components.climate_group_helper: debug
 
-# Monitora log
+# Monitor logs
 ha core logs --follow | grep climate_group_helper
 ```
 
 ---
 
-## 🔑 Punti Chiave
+## 🔑 Key Points
 
-### Differenze Architetturali v0.16.1 → v0.17.0
+### Architectural Differences v0.16.1 → v0.17.0
 
-| Aspetto | v0.16.1 | v0.17.0 |
-|---------|---------|---------|
-| Chiamate servizi | `hass.services.async_call()` | `call_handler.call_immediate()` |
-| Stato | `_group.hvac_mode` | `target_state.hvac_mode` |
-| Accesso hass | `_group.hass` | `_hass` |
-| Targeting | Loop manuale | `entity_ids` parameter |
+| Aspect | v0.16.1 | v0.17.0 |
+|--------|---------|---------|
+| Service calls | `hass.services.async_call()` | `call_handler.call_immediate()` |
+| State | `_group.hvac_mode` | `target_state.hvac_mode` |
+| Hass access | `_group.hass` | `_hass` |
+| Targeting | Manual loop | `entity_ids` parameter |
 
-### Codice Chiave
+### Key Code
 
 ```python
-# ✅ CORRETTO (v0.17.0)
+# ✅ CORRECT (v0.17.0)
 await self.call_handler.call_immediate(
     {"hvac_mode": HVACMode.OFF}, 
-    entity_ids=["climate.termo1"]
+    entity_ids=["climate.thermo1"]
 )
 
 if self.target_state.hvac_mode == HVACMode.OFF:
@@ -315,18 +317,18 @@ state = self._hass.states.get(entity_id)
 
 ---
 
-## 📞 Supporto
+## 📞 Support
 
-### Documentazione
+### Documentation
 
 - **Quick Start**: [QUICK_REFERENCE.md](QUICK_REFERENCE.md)
-- **Tecnica**: [TECHNICAL_DOCUMENTATION.md](TECHNICAL_DOCUMENTATION.md)
+- **Technical**: [TECHNICAL_DOCUMENTATION.md](TECHNICAL_DOCUMENTATION.md)
 - **Diff**: [MODIFICATIONS_DIFF.md](MODIFICATIONS_DIFF.md)
 
 ### Repository
 
 - **Upstream**: https://github.com/bjrnptrsn/climate_group_helper
-- **Versione Base**: 0.17.0
+- **Base Version**: 0.17.0
 - **Custom Feature**: Area-Based Window Control
 
 ---
@@ -335,18 +337,18 @@ state = self._hass.states.get(entity_id)
 
 ### 2026-01-24 - v0.17.0 + Area-Based
 
-- ✅ Merge completato su architettura v0.17.0
-- ✅ Area-based window control integrato
-- ✅ Backward compatibility preservata
-- ✅ Test completati con successo
-- ✅ Documentazione completa creata
-- ✅ Codice commentato inline
+- ✅ Merge completed on v0.17.0 architecture
+- ✅ Area-based window control integrated
+- ✅ Backward compatibility preserved
+- ✅ Tests completed successfully
+- ✅ Complete documentation created
+- ✅ Code commented inline
 
 ---
 
-## 📄 Licenza
+## 📄 License
 
-Stesso della versione upstream (Climate Group Helper).
+Same as upstream version (Climate Group Helper).
 
 ---
 
@@ -358,6 +360,13 @@ Stesso della versione upstream (Climate Group Helper).
 
 ---
 
-**Ultima Modifica**: 2026-01-24  
-**Versione**: 0.17.0 + Area-Based Window Control  
-**Status**: ✅ Produzione
+## 🌍 Languages
+
+- **English**: This documentation (root directory)
+- **Italian**: [docs_ita/](docs_ita/) directory
+
+---
+
+**Last Modified**: 2026-01-24  
+**Version**: 0.17.0 + Area-Based Window Control  
+**Status**: ✅ Production
