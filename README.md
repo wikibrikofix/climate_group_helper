@@ -1,5 +1,19 @@
 # Climate Group Helper - Area-Based Window Control
 
+> ⚠️ **EXPERIMENTAL FORK - USE AT YOUR OWN RISK**
+> 
+> This is an **unofficial, experimental fork** of the [Climate Group Helper](https://github.com/bjrnptrsn/climate_group_helper) integration.
+> 
+> - ❌ **NOT OFFICIALLY SUPPORTED** - This fork is not maintained by the original author
+> - ❌ **NO SUPPORT PROVIDED** - I do not offer any support, bug fixes, or updates
+> - ❌ **USE AT YOUR OWN RISK** - This is experimental code that may break your setup
+> - ⚠️ **MAY BECOME OUTDATED** - This fork may not receive updates when the upstream project changes
+> 
+> **For the official, supported version**, please use the original repository:  
+> 👉 https://github.com/bjrnptrsn/climate_group_helper
+
+---
+
 ## 📋 Overview
 
 This repository contains a modified version of the **Climate Group Helper** module for Home Assistant with the addition of the **Area-Based Window Control** feature.
@@ -13,7 +27,19 @@ Enables granular thermostat control based on areas: when a window opens, only th
 - **Base**: Climate Group Helper v0.17.0
 - **Modification**: Area-Based Window Control
 - **Date**: 2026-01-24
-- **Status**: ✅ Tested and Working
+- **Status**: ⚠️ Experimental
+
+---
+
+## ⚠️ Disclaimer
+
+**THIS SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.**
+
+- This is a personal fork for my own use
+- No support, maintenance, or updates guaranteed
+- May contain bugs or break your Home Assistant setup
+- Use only if you understand the code and accept the risks
+- For production use, stick to the official version
 
 ---
 
