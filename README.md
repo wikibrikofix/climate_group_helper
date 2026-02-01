@@ -24,10 +24,25 @@ Enables granular thermostat control based on areas: when a window opens, only th
 
 ### Version
 
-- **Base**: Climate Group Helper v0.17.0
+- **Base**: Climate Group Helper v0.18.0
 - **Modification**: Area-Based Window Control
-- **Date**: 2026-01-24
-- **Status**: ⚠️ Experimental
+- **Version**: v0.18.0-area-based
+- **Date**: 2026-02-01
+- **Status**: ⚠️ Experimental - Tested and Working
+
+---
+
+## ✨ What's New in v0.18.0-area-based
+
+### From Upstream v0.18.0
+- 🚀 **Advanced Scheduler**: Resync interval, override duration, sticky override
+- 🌡️ **Advanced Calibration**: Offset and Scaled (x100) modes, heartbeat for TRV compatibility
+
+### Area-Based Window Control (Custom Feature)
+- 🪟 **Granular Control**: Only thermostats in the same area as the open window are affected
+- 🏠 **Automatic Detection**: Uses Home Assistant's area registry
+- ⏱️ **Independent Timers**: Each window has its own delay timer
+- 🔄 **Smart Restore**: Restores only when all windows in the area are closed
 
 ---
 
