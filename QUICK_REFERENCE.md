@@ -24,7 +24,7 @@ _handle_window_closed()         # Restores area thermostats
 _get_entity_area()              # Detects area from registry
 _get_thermostats_in_area()      # Finds thermostats by area
 
-# v0.17.0 integration:
+# v0.18.0 integration:
 self.call_handler.call_immediate(entity_ids=[...])  # Instead of hass.services
 self.target_state.hvac_mode                         # Instead of _group.hvac_mode
 ```
@@ -233,7 +233,7 @@ DEBUG [...] Target mode is OFF, not restoring          → Normal if group OFF
    # ❌ WRONG (v0.16.1)
    await self._group.hass.services.async_call(...)
    
-   # ✅ CORRECT (v0.17.0)
+   # ✅ CORRECT (v0.18.0)
    await self.call_handler.call_immediate(entity_ids=[...])
    ```
 
@@ -288,7 +288,7 @@ See: [TECHNICAL_DOCUMENTATION.md](TECHNICAL_DOCUMENTATION.md)
 
 - [ ] const.py: 3 constants + 1 enum
 - [ ] service_call.py: entity_ids parameter + override
-- [ ] window_control.py: 5 area-based methods + v0.17.0 integration
+- [ ] window_control.py: 5 area-based methods + v0.18.0 integration
 - [ ] config_flow.py: Dynamic UI
 - [ ] strings.json: 3 translations
 - [ ] Test: open/close window
@@ -297,8 +297,8 @@ See: [TECHNICAL_DOCUMENTATION.md](TECHNICAL_DOCUMENTATION.md)
 
 ---
 
-**Last Modified**: 2026-01-24  
-**Version**: 0.17.0 + Area-Based Window Control  
+**Last Modified**: 2026-02-01  
+**Version**: 0.18.0 + Area-Based Window Control  
 **Status**: ✅ Tested and Working
 
 ---

@@ -71,7 +71,7 @@ Enables granular thermostat control based on areas: when a window opens, only th
 ### Technical Documentation
 
 2. **[TECHNICAL_DOCUMENTATION.md](TECHNICAL_DOCUMENTATION.md)**
-   - Complete v0.17.0 architecture
+   - Complete v0.18.0 architecture
    - Detailed explanation of each modification
    - Step-by-step re-merge guide
    - Complete test suite
@@ -104,7 +104,7 @@ Enables granular thermostat control based on areas: when a window opens, only th
    - Testing checklist
 
 7. **[COMPARISON.md](COMPARISON.md)**
-   - Comparison fork v0.16.1 vs v0.17.0
+   - Comparison fork v0.16.1 vs v0.18.0
    - Architectural differences
    - Advantages of new implementation
 
@@ -176,18 +176,18 @@ climate_group_helper/
 ├── docs_ita/                           ← Italian documentation
 └── custom_components/
     └── climate_group_helper/
-        ├── __init__.py                 (v0.17.0 base)
-        ├── climate.py                  (v0.17.0 base)
+        ├── __init__.py                 (v0.18.0 base)
+        ├── climate.py                  (v0.18.0 base)
         ├── const.py                    ⚙️ MODIFIED
         ├── window_control.py           ⚙️ MODIFIED
         ├── service_call.py             ⚙️ MODIFIED
         ├── config_flow.py              ⚙️ MODIFIED
         ├── strings.json                ⚙️ MODIFIED
-        ├── state.py                    (v0.17.0 base)
-        ├── sync_mode.py                (v0.17.0 base)
-        ├── schedule.py                 (v0.17.0 base)
-        ├── sensor.py                   (v0.17.0 base)
-        ├── manifest.json               (v0.17.0)
+        ├── state.py                    (v0.18.0 base)
+        ├── sync_mode.py                (v0.18.0 base)
+        ├── schedule.py                 (v0.18.0 base)
+        ├── sensor.py                   (v0.18.0 base)
+        ├── manifest.json               (v0.18.0)
         └── AREA_BASED_WINDOW_CONTROL.md ← User guide
 ```
 
@@ -209,7 +209,7 @@ climate_group_helper/
 
 ### Unmodified Files
 
-All other files are identical to v0.17.0 base:
+All other files are identical to v0.18.0 base:
 - `__init__.py`, `climate.py`, `state.py`, `sync_mode.py`, `schedule.py`, `sensor.py`
 
 ---
@@ -231,7 +231,7 @@ All other files are identical to v0.17.0 base:
 - ✅ Complete backward compatibility
 - ✅ No breaking changes
 
-### v0.17.0 Integration
+### v0.18.0 Integration
 
 - ✅ Uses new TargetState system
 - ✅ Compatible with CallHandler architecture
@@ -245,7 +245,7 @@ All other files are identical to v0.17.0 base:
 
 ### Test Completed
 
-**Date**: 2026-01-24 19:58  
+**Date**: 2026-02-01 19:58  
 **Environment**: Home Assistant 2026.1.2
 
 **Test Timeline:**
@@ -332,9 +332,9 @@ ha core logs --follow | grep climate_group_helper
 
 ## 🔑 Key Points
 
-### Architectural Differences v0.16.1 → v0.17.0
+### Architectural Differences v0.16.1 → v0.18.0
 
-| Aspect | v0.16.1 | v0.17.0 |
+| Aspect | v0.16.1 | v0.18.0 |
 |--------|---------|---------|
 | Service calls | `hass.services.async_call()` | `call_handler.call_immediate()` |
 | State | `_group.hvac_mode` | `target_state.hvac_mode` |
@@ -344,7 +344,7 @@ ha core logs --follow | grep climate_group_helper
 ### Key Code
 
 ```python
-# ✅ CORRECT (v0.17.0)
+# ✅ CORRECT (v0.18.0)
 await self.call_handler.call_immediate(
     {"hvac_mode": HVACMode.OFF}, 
     entity_ids=["climate.thermo1"]
@@ -369,16 +369,16 @@ state = self._hass.states.get(entity_id)
 ### Repository
 
 - **Upstream**: https://github.com/bjrnptrsn/climate_group_helper
-- **Base Version**: 0.17.0
+- **Base Version**: 0.18.0
 - **Custom Feature**: Area-Based Window Control
 
 ---
 
 ## 📝 Changelog
 
-### 2026-01-24 - v0.17.0 + Area-Based
+### 2026-02-01 - v0.18.0 + Area-Based
 
-- ✅ Merge completed on v0.17.0 architecture
+- ✅ Merge completed on v0.18.0 architecture
 - ✅ Area-based window control integrated
 - ✅ Backward compatibility preserved
 - ✅ Tests completed successfully
@@ -397,7 +397,7 @@ Same as upstream version (Climate Group Helper).
 
 - **Climate Group Helper**: bjrnptrsn
 - **Area-Based Feature**: Custom modification
-- **Merge v0.17.0**: 2026-01-24
+- **Merge v0.18.0**: 2026-02-01
 
 ---
 
@@ -408,6 +408,6 @@ Same as upstream version (Climate Group Helper).
 
 ---
 
-**Last Modified**: 2026-01-24  
-**Version**: 0.17.0 + Area-Based Window Control  
+**Last Modified**: 2026-02-01  
+**Version**: 0.18.0 + Area-Based Window Control  
 **Status**: ✅ Production

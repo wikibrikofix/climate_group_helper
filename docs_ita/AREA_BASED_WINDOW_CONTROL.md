@@ -52,7 +52,7 @@ Area-based window control is an advanced feature that automatically turns off th
 
 ## Architecture Integration
 
-The area-based feature is fully integrated with the v0.17.0 architecture:
+The area-based feature is fully integrated with the v0.18.0 architecture:
 
 - Uses `WindowControlCallHandler` with optional `entity_ids` parameter
 - Respects the central `TargetState` for restoration

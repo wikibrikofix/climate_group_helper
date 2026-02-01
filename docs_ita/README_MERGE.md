@@ -2,13 +2,13 @@
 
 ## Stato del Merge
 
-Il merge della feature **Area-Based Window Control** sulla versione **v0.17.0** è stato completato con successo!
+Il merge della feature **Area-Based Window Control** sulla versione **v0.18.0** è stato completato con successo!
 
 ## File Modificati
 
 ### Core Files
 1. **`const.py`** - Aggiunte costanti per area-based mode
-2. **`window_control.py`** - Riscritto completamente con integrazione v0.17.0
+2. **`window_control.py`** - Riscritto completamente con integrazione v0.18.0
 3. **`service_call.py`** - Modificato `WindowControlCallHandler` per supportare `entity_ids`
 4. **`config_flow.py`** - UI dinamica basata sulla modalità selezionata
 5. **`strings.json`** - Aggiunte traduzioni per nuove opzioni
@@ -20,7 +20,7 @@ Il merge della feature **Area-Based Window Control** sulla versione **v0.17.0** 
 ## Cosa È Stato Fatto
 
 ### ✅ Integrazione Architetturale
-- La feature area-based è stata completamente integrata con la nuova architettura v0.17.0
+- La feature area-based è stata completamente integrata con la nuova architettura v0.18.0
 - Usa il nuovo sistema di `TargetState` e `CallHandler`
 - Compatibile con Schedule e Sync Mode
 - Nessun conflitto con il sistema di state management
@@ -78,7 +78,7 @@ Test:
 ## Differenze con il Fork Originale
 
 ### Architettura
-| Aspetto | Fork v0.16.1 | Nuovo v0.17.0 |
+| Aspetto | Fork v0.16.1 | Nuovo v0.18.0 |
 |---------|--------------|---------------|
 | Chiamate servizi | `hass.services.async_call()` diretto | `call_handler.call_immediate()` |
 | Gestione stato | `_control_state` semplice | `TargetState` immutabile |
@@ -146,7 +146,7 @@ Per problemi o domande:
 
 - ✅ Tutti i file Python hanno sintassi valida
 - ✅ Il file JSON è valido
-- ✅ La feature è completamente integrata con v0.17.0
+- ✅ La feature è completamente integrata con v0.18.0
 - ✅ Backward compatibility garantita
 - ✅ Documentazione completa fornita
 

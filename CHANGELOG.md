@@ -63,7 +63,7 @@ All notable changes to this fork will be documented in this file.
 
 ---
 
-## [0.17.0-area-based] - 2026-01-24
+## [0.17.0-area-based] - 2026-02-01
 
 ### Added
 - Initial implementation of area-based window control

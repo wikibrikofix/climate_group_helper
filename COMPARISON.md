@@ -1,4 +1,4 @@
-# Comparison v0.16.1 vs v0.17.0
+# Comparison v0.16.1 vs v0.18.0
 
 For detailed architectural comparison, see:
 
@@ -8,7 +8,7 @@ For detailed architectural comparison, see:
 
 ### Main Differences
 
-| Aspect | v0.16.1 | v0.17.0 |
+| Aspect | v0.16.1 | v0.18.0 |
 |--------|---------|---------|
 | Service calls | `hass.services.async_call()` | `call_handler.call_immediate()` |
 | State | `_group.hvac_mode` | `target_state.hvac_mode` |
@@ -17,7 +17,7 @@ For detailed architectural comparison, see:
 | Context tracking | Manual | Automatic |
 | Retry logic | None | Automatic |
 
-### Advantages v0.17.0
+### Advantages v0.18.0
 
 - ✅ Better integration with Schedule and Sync Mode
 - ✅ Conflict prevention via source-aware state management

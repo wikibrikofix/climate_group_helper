@@ -24,7 +24,7 @@ _handle_window_closed()         # Ripristina termostati area
 _get_entity_area()              # Rileva area da registry
 _get_thermostats_in_area()      # Trova termostati per area
 
-# Integrazione v0.17.0:
+# Integrazione v0.18.0:
 self.call_handler.call_immediate(entity_ids=[...])  # Invece di hass.services
 self.target_state.hvac_mode                         # Invece di _group.hvac_mode
 ```
@@ -222,7 +222,7 @@ DEBUG [...] Target mode is OFF, not restoring          → Normale se gruppo OFF
    # ❌ SBAGLIATO (v0.16.1)
    await self._group.hass.services.async_call(...)
    
-   # ✅ CORRETTO (v0.17.0)
+   # ✅ CORRETTO (v0.18.0)
    await self.call_handler.call_immediate(entity_ids=[...])
    ```
 
@@ -277,7 +277,7 @@ Vedi: `/root/homeassistant/repos/climate_group_helper_source/TECHNICAL_DOCUMENTA
 
 - [ ] const.py: 3 costanti + 1 enum
 - [ ] service_call.py: entity_ids parameter + override
-- [ ] window_control.py: 5 metodi area-based + integrazione v0.17.0
+- [ ] window_control.py: 5 metodi area-based + integrazione v0.18.0
 - [ ] config_flow.py: UI dinamica
 - [ ] strings.json: 3 traduzioni
 - [ ] Test: apri/chiudi finestra
@@ -286,6 +286,6 @@ Vedi: `/root/homeassistant/repos/climate_group_helper_source/TECHNICAL_DOCUMENTA
 
 ---
 
-**Ultima Modifica**: 2026-01-24  
-**Versione**: 0.17.0 + Area-Based Window Control  
+**Ultima Modifica**: 2026-02-01  
+**Versione**: 0.18.0 + Area-Based Window Control  
 **Status**: ✅ Testato e Funzionante

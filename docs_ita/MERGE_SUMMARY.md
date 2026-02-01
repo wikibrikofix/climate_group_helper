@@ -1,4 +1,4 @@
-# Merge Summary: Area-Based Window Control on v0.17.0
+# Merge Summary: Area-Based Window Control on v0.18.0
 
 ## Changes Made
 
@@ -10,7 +10,7 @@ Added constants for area-based window control:
 - `WindowControlMode.AREA_BASED` - new mode enum
 
 ### 2. `window_control.py`
-Complete rewrite integrating area-based feature with v0.17.0 architecture:
+Complete rewrite integrating area-based feature with v0.18.0 architecture:
 - **Dual mode support**: Legacy (room/zone sensors) and Area-based
 - **Area-based logic**:
   - `_area_based_listener()` - handles window state changes
@@ -86,9 +86,9 @@ Created `AREA_BASED_WINDOW_CONTROL.md` with:
 
 ## Migration Notes
 
-### From v0.16.1 Fork to v0.17.0 with Area-Based
+### From v0.16.1 Fork to v0.18.0 with Area-Based
 
-**Breaking Changes in v0.17.0:**
+**Breaking Changes in v0.18.0:**
 - New state management architecture (TargetState dataclass)
 - New service call handler system
 - Window control redesigned to use call handlers

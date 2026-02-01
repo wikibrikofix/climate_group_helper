@@ -18,21 +18,21 @@ Il modulo **Climate Group Helper** per Home Assistant permette di raggruppare pi
 ### Versioni
 - **Versione Base**: 0.16.1 (con window control legacy room/zone)
 - **Fork Custom**: 0.16.1 + Area-Based Window Control
-- **Versione Target**: 0.17.0 (redesign architetturale completo)
-- **Versione Finale**: 0.17.0 + Area-Based Window Control (questo merge)
+- **Versione Target**: 0.18.0 (redesign architetturale completo)
+- **Versione Finale**: 0.18.0 + Area-Based Window Control (questo merge)
 
 ### Data Merge
-- **Prima implementazione**: 2026-01-24
-- **Test completato**: 2026-01-24 19:58
+- **Prima implementazione**: 2026-02-01
+- **Test completato**: 2026-02-01 19:58
 - **Ambiente**: Home Assistant 2026.1.2
 
 ---
 
 ## Architettura
 
-### Redesign v0.17.0
+### Redesign v0.18.0
 
-La versione 0.17.0 ha introdotto un redesign architetturale completo:
+La versione 0.18.0 ha introdotto un redesign architetturale completo:
 
 #### 1. State Management (state.py)
 ```python
@@ -261,7 +261,7 @@ def _get_entity_area(self, entity_id: str) -> str | None:
 
 **Differenze Chiave vs Fork v0.16.1:**
 
-| Aspetto | Fork v0.16.1 | Merge v0.17.0 |
+| Aspetto | Fork v0.16.1 | Merge v0.18.0 |
 |---------|--------------|---------------|
 | Chiamate servizi | `hass.services.async_call()` diretto | `call_handler.call_immediate()` |
 | Accesso stato | `self._group.hvac_mode` | `self.target_state.hvac_mode` |
@@ -738,24 +738,24 @@ ha core logs | grep "WindowControl initialized"
 /root/homeassistant/
 ├── custom_components/
 │   └── climate_group_helper/
-│       ├── __init__.py                    (v0.17.0 base)
-│       ├── climate.py                     (v0.17.0 base)
+│       ├── __init__.py                    (v0.18.0 base)
+│       ├── climate.py                     (v0.18.0 base)
 │       ├── const.py                       (MODIFICATO - area-based)
 │       ├── window_control.py              (MODIFICATO - area-based)
 │       ├── service_call.py                (MODIFICATO - entity_ids)
 │       ├── config_flow.py                 (MODIFICATO - UI dinamica)
 │       ├── strings.json                   (MODIFICATO - traduzioni)
-│       ├── state.py                       (v0.17.0 base)
-│       ├── sync_mode.py                   (v0.17.0 base)
-│       ├── schedule.py                    (v0.17.0 base)
-│       ├── sensor.py                      (v0.17.0 base)
-│       ├── manifest.json                  (v0.17.0)
+│       ├── state.py                       (v0.18.0 base)
+│       ├── sync_mode.py                   (v0.18.0 base)
+│       ├── schedule.py                    (v0.18.0 base)
+│       ├── sensor.py                      (v0.18.0 base)
+│       ├── manifest.json                  (v0.18.0)
 │       └── AREA_BASED_WINDOW_CONTROL.md   (Documentazione)
 │
 └── repos/
     ├── climate_group_helper_1.61.1/       (Versione originale)
     ├── climate_group_helper_fork/         (Fork v0.16.1 + area-based)
-    └── climate_group_helper_source/       (v0.17.0 + area-based - MASTER)
+    └── climate_group_helper_source/       (v0.18.0 + area-based - MASTER)
         └── custom_components/
             └── climate_group_helper/
                 └── [file modificati]
@@ -813,8 +813,8 @@ ha core logs | grep DEBUG | grep climate_group_helper
 
 ## Changelog
 
-### 2026-01-24 - v0.17.0 + Area-Based
-- ✅ Merge completato su architettura v0.17.0
+### 2026-02-01 - v0.18.0 + Area-Based
+- ✅ Merge completato su architettura v0.18.0
 - ✅ Area-based window control integrato
 - ✅ Backward compatibility con modalità legacy
 - ✅ Test completati con successo
@@ -825,7 +825,7 @@ ha core logs | grep DEBUG | grep climate_group_helper
 ## Contatti e Riferimenti
 
 - **Repository Upstream**: https://github.com/bjrnptrsn/climate_group_helper
-- **Versione Base**: 0.17.0
+- **Versione Base**: 0.18.0
 - **Custom Feature**: Area-Based Window Control
 - **Ambiente**: Home Assistant 2026.1.2
-- **Data Implementazione**: 2026-01-24
+- **Data Implementazione**: 2026-02-01

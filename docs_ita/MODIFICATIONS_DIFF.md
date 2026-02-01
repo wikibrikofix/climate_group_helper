@@ -1,13 +1,13 @@
 # Diff delle Modifiche - Area-Based Window Control
 
 Questo file contiene i diff esatti delle modifiche apportate per implementare
-la feature area-based window control sulla versione 0.17.0.
+la feature area-based window control sulla versione 0.18.0.
 
 ## const.py
 
 ```diff
---- a/const.py (v0.17.0 base)
-+++ b/const.py (v0.17.0 + area-based)
+--- a/const.py (v0.18.0 base)
++++ b/const.py (v0.18.0 + area-based)
 @@ -68,9 +68,12 @@
  CONF_ROOM_OPEN_DELAY = "room_open_delay"
  CONF_ZONE_OPEN_DELAY = "zone_open_delay"
@@ -31,8 +31,8 @@ la feature area-based window control sulla versione 0.17.0.
 ## service_call.py - WindowControlCallHandler
 
 ```diff
---- a/service_call.py (v0.17.0 base)
-+++ b/service_call.py (v0.17.0 + area-based)
+--- a/service_call.py (v0.18.0 base)
++++ b/service_call.py (v0.18.0 + area-based)
 @@ -395,10 +395,28 @@
  class WindowControlCallHandler(BaseServiceCallHandler):
 -    """Call handler for Window Control operations."""
@@ -71,8 +71,8 @@ la feature area-based window control sulla versione 0.17.0.
 ## window_control.py - Struttura Principale
 
 ```diff
---- a/window_control.py (v0.17.0 base)
-+++ b/window_control.py (v0.17.0 + area-based)
+--- a/window_control.py (v0.18.0 base)
++++ b/window_control.py (v0.18.0 + area-based)
 @@ -1,4 +1,28 @@
 -"""Window control handler for automatic heating shutdown when windows open."""
 +"""Window control handler for automatic heating shutdown when windows open.
@@ -82,13 +82,13 @@ la feature area-based window control sulla versione 0.17.0.
 +This file has been modified to support area-based window control in addition to
 +the legacy room/zone sensor mode.
 +
-+Key Changes from v0.17.0 base:
++Key Changes from v0.18.0 base:
 +1. Added area-based configuration (CONF_WINDOW_SENSORS, CONF_WINDOW_OPEN_DELAY)
 +2. Implemented _area_based_listener for per-window event handling
 +3. Added _handle_window_opened/_handle_window_closed for area-specific control
 +4. Added _get_entity_area for automatic area detection via registry
 +5. Added _get_thermostats_in_area for finding members by area
-+6. Integrated with v0.17.0 architecture (call_handler, target_state)
++6. Integrated with v0.18.0 architecture (call_handler, target_state)
 +
 +Architecture Integration:
 +- Uses self.call_handler.call_immediate(entity_ids=...) for targeted control
@@ -99,8 +99,8 @@ la feature area-based window control sulla versione 0.17.0.
 +- Legacy mode (room/zone sensors) fully preserved
 +- Automatic config cleanup when switching modes
 +
-+Date: 2026-01-24
-+Version: 0.17.0 + Area-Based Window Control
++Date: 2026-02-01
++Version: 0.18.0 + Area-Based Window Control
 +"""
  from __future__ import annotations
  
@@ -163,7 +163,7 @@ la feature area-based window control sulla versione 0.17.0.
 ## window_control.py - Metodi Area-Based (NUOVI)
 
 ```python
-# QUESTI METODI SONO COMPLETAMENTE NUOVI - NON ESISTONO IN v0.17.0 BASE
+# QUESTI METODI SONO COMPLETAMENTE NUOVI - NON ESISTONO IN v0.18.0 BASE
 
 @callback
 def _area_based_listener(self, event: Event[EventStateChangedData]) -> None:
@@ -309,8 +309,8 @@ def _get_entity_area(self, entity_id: str) -> str | None:
 ## config_flow.py - async_step_window_control
 
 ```diff
---- a/config_flow.py (v0.17.0 base)
-+++ b/config_flow.py (v0.17.0 + area-based)
+--- a/config_flow.py (v0.18.0 base)
++++ b/config_flow.py (v0.18.0 + area-based)
 @@ -18,6 +18,8 @@
      CONF_ROOM_SENSOR,
      CONF_SCHEDULE_ENTITY,
@@ -439,8 +439,8 @@ def _get_entity_area(self, entity_id: str) -> str | None:
 ## strings.json
 
 ```diff
---- a/strings.json (v0.17.0 base)
-+++ b/strings.json (v0.17.0 + area-based)
+--- a/strings.json (v0.18.0 base)
++++ b/strings.json (v0.18.0 + area-based)
 @@ -126,6 +126,8 @@
            "room_sensor": "Room Window Sensor",
            "zone_sensor": "Zone Window Sensor",
@@ -493,6 +493,6 @@ def _get_entity_area(self, entity_id: str) -> str | None:
 
 ---
 
-**Data**: 2026-01-24  
-**Versione Base**: 0.17.0  
-**Versione Finale**: 0.17.0 + Area-Based Window Control
+**Data**: 2026-02-01  
+**Versione Base**: 0.18.0  
+**Versione Finale**: 0.18.0 + Area-Based Window Control

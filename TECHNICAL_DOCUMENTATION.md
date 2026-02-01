@@ -13,9 +13,9 @@ For complete technical documentation with architecture details, re-merge guide, 
 
 ## English Summary
 
-### v0.17.0 Architecture
+### v0.18.0 Architecture
 
-The v0.17.0 version introduced a complete architectural redesign:
+The v0.18.0 version introduced a complete architectural redesign:
 
 1. **State Management** (`state.py`): Immutable `TargetState` dataclass with metadata
 2. **Service Call Handlers** (`service_call.py`): Specialized handlers with debouncing and retry logic

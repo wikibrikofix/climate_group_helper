@@ -1,4 +1,4 @@
-# Merge Summary - Area-Based Window Control on v0.17.0
+# Merge Summary - Area-Based Window Control on v0.18.0
 
 ## Changes Made
 
@@ -9,10 +9,10 @@
 - Added `WindowControlMode.AREA_BASED` - new mode enum
 
 ### 2. window_control.py
-Complete rewrite integrating area-based feature with v0.17.0 architecture:
+Complete rewrite integrating area-based feature with v0.18.0 architecture:
 - Dual mode support: Legacy (room/zone sensors) and Area-based
 - Area-based logic with automatic zone detection
-- Integration with v0.17.0 state management
+- Integration with v0.18.0 state management
 - Uses `call_handler.call_immediate()` with optional `entity_ids`
 
 ### 3. service_call.py
@@ -33,11 +33,11 @@ Added translations for new configuration options
 
 ## Testing
 
-✅ Tested on 2026-01-24 19:58
+✅ Tested on 2026-02-01 19:58
 ✅ Environment: Home Assistant 2026.1.2
 ✅ Result: Perfect operation
 
 ---
 
-**Version**: 0.17.0 + Area-Based Window Control  
+**Version**: 0.18.0 + Area-Based Window Control  
 **Status**: ✅ Production Ready

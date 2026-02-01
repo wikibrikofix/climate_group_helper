@@ -10,9 +10,9 @@ Permette il controllo granulare dei termostati basato sulle aree: quando una fin
 
 ### Versione
 
-- **Base**: Climate Group Helper v0.17.0
+- **Base**: Climate Group Helper v0.18.0
 - **Modifica**: Area-Based Window Control
-- **Data**: 2026-01-24
+- **Data**: 2026-02-01
 - **Status**: ✅ Testato e Funzionante
 
 ---
@@ -30,7 +30,7 @@ Permette il controllo granulare dei termostati basato sulle aree: quando una fin
 ### Documentazione Tecnica
 
 2. **[TECHNICAL_DOCUMENTATION.md](TECHNICAL_DOCUMENTATION.md)**
-   - Architettura completa v0.17.0
+   - Architettura completa v0.18.0
    - Spiegazione dettagliata di ogni modifica
    - Guida al re-merge passo-passo
    - Test suite completo
@@ -63,7 +63,7 @@ Permette il controllo granulare dei termostati basato sulle aree: quando una fin
    - Testing checklist
 
 7. **[COMPARISON.md](COMPARISON.md)**
-   - Confronto fork v0.16.1 vs v0.17.0
+   - Confronto fork v0.16.1 vs v0.18.0
    - Differenze architetturali
    - Vantaggi nuova implementazione
 
@@ -133,18 +133,18 @@ climate_group_helper_source/
 ├── MERGE_COMPLETE.txt                  ← Riepilogo visuale
 └── custom_components/
     └── climate_group_helper/
-        ├── __init__.py                 (v0.17.0 base)
-        ├── climate.py                  (v0.17.0 base)
+        ├── __init__.py                 (v0.18.0 base)
+        ├── climate.py                  (v0.18.0 base)
         ├── const.py                    ⚙️ MODIFICATO
         ├── window_control.py           ⚙️ MODIFICATO
         ├── service_call.py             ⚙️ MODIFICATO
         ├── config_flow.py              ⚙️ MODIFICATO
         ├── strings.json                ⚙️ MODIFICATO
-        ├── state.py                    (v0.17.0 base)
-        ├── sync_mode.py                (v0.17.0 base)
-        ├── schedule.py                 (v0.17.0 base)
-        ├── sensor.py                   (v0.17.0 base)
-        ├── manifest.json               (v0.17.0)
+        ├── state.py                    (v0.18.0 base)
+        ├── sync_mode.py                (v0.18.0 base)
+        ├── schedule.py                 (v0.18.0 base)
+        ├── sensor.py                   (v0.18.0 base)
+        ├── manifest.json               (v0.18.0)
         └── AREA_BASED_WINDOW_CONTROL.md ← Guida utente
 ```
 
@@ -166,7 +166,7 @@ climate_group_helper_source/
 
 ### File Non Modificati
 
-Tutti gli altri file sono identici alla versione v0.17.0 base:
+Tutti gli altri file sono identici alla versione v0.18.0 base:
 - `__init__.py`, `climate.py`, `state.py`, `sync_mode.py`, `schedule.py`, `sensor.py`
 
 ---
@@ -188,7 +188,7 @@ Tutti gli altri file sono identici alla versione v0.17.0 base:
 - ✅ Backward compatibility completa
 - ✅ Nessuna breaking change
 
-### Integrazione v0.17.0
+### Integrazione v0.18.0
 
 - ✅ Usa nuovo sistema TargetState
 - ✅ Compatibile con CallHandler architecture
@@ -202,7 +202,7 @@ Tutti gli altri file sono identici alla versione v0.17.0 base:
 
 ### Test Completato
 
-**Data**: 2026-01-24 19:58  
+**Data**: 2026-02-01 19:58  
 **Ambiente**: Home Assistant 2026.1.2
 
 **Timeline Test:**
@@ -289,9 +289,9 @@ ha core logs --follow | grep climate_group_helper
 
 ## 🔑 Punti Chiave
 
-### Differenze Architetturali v0.16.1 → v0.17.0
+### Differenze Architetturali v0.16.1 → v0.18.0
 
-| Aspetto | v0.16.1 | v0.17.0 |
+| Aspetto | v0.16.1 | v0.18.0 |
 |---------|---------|---------|
 | Chiamate servizi | `hass.services.async_call()` | `call_handler.call_immediate()` |
 | Stato | `_group.hvac_mode` | `target_state.hvac_mode` |
@@ -301,7 +301,7 @@ ha core logs --follow | grep climate_group_helper
 ### Codice Chiave
 
 ```python
-# ✅ CORRETTO (v0.17.0)
+# ✅ CORRETTO (v0.18.0)
 await self.call_handler.call_immediate(
     {"hvac_mode": HVACMode.OFF}, 
     entity_ids=["climate.termo1"]
@@ -326,16 +326,16 @@ state = self._hass.states.get(entity_id)
 ### Repository
 
 - **Upstream**: https://github.com/bjrnptrsn/climate_group_helper
-- **Versione Base**: 0.17.0
+- **Versione Base**: 0.18.0
 - **Custom Feature**: Area-Based Window Control
 
 ---
 
 ## 📝 Changelog
 
-### 2026-01-24 - v0.17.0 + Area-Based
+### 2026-02-01 - v0.18.0 + Area-Based
 
-- ✅ Merge completato su architettura v0.17.0
+- ✅ Merge completato su architettura v0.18.0
 - ✅ Area-based window control integrato
 - ✅ Backward compatibility preservata
 - ✅ Test completati con successo
@@ -354,10 +354,10 @@ Stesso della versione upstream (Climate Group Helper).
 
 - **Climate Group Helper**: bjrnptrsn
 - **Area-Based Feature**: Custom modification
-- **Merge v0.17.0**: 2026-01-24
+- **Merge v0.18.0**: 2026-02-01
 
 ---
 
-**Ultima Modifica**: 2026-01-24  
-**Versione**: 0.17.0 + Area-Based Window Control  
+**Ultima Modifica**: 2026-02-01  
+**Versione**: 0.18.0 + Area-Based Window Control  
 **Status**: ✅ Produzione

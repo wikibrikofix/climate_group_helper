@@ -22,7 +22,7 @@
 | [QUICK_REFERENCE.md](QUICK_REFERENCE.md) ⭐⭐⭐ | Quick guide, checklist, troubleshooting | 10 min |
 | [TECHNICAL_DOCUMENTATION.md](TECHNICAL_DOCUMENTATION.md) | Architecture, re-merge guide, test suite | 60 min |
 | [MODIFICATIONS_DIFF.md](MODIFICATIONS_DIFF.md) | Exact diffs, complete code | 30 min |
-| [COMPARISON.md](COMPARISON.md) | Comparison v0.16.1 vs v0.17.0 | 20 min |
+| [COMPARISON.md](COMPARISON.md) | Comparison v0.16.1 vs v0.18.0 | 20 min |
 
 ### For Users
 
@@ -110,7 +110,7 @@ climate_group_helper/
         ├── const.py                    ← ⚙️ Modified
         ├── strings.json                ← ⚙️ Modified
         ├── AREA_BASED_WINDOW_CONTROL.md ← User guide
-        └── [other v0.17.0 base files]
+        └── [other v0.18.0 base files]
 ```
 
 ---
@@ -148,9 +148,9 @@ cat QUICK_REFERENCE.md | less
 ## 📞 Quick References
 
 ### Versions
-- **Base**: Climate Group Helper v0.17.0
+- **Base**: Climate Group Helper v0.18.0
 - **Modification**: Area-Based Window Control
-- **Date**: 2026-01-24
+- **Date**: 2026-02-01
 
 ### Important Paths
 - **Documentation**: `/root/homeassistant/repos/climate_group_helper_fork/`
@@ -163,7 +163,7 @@ cat QUICK_REFERENCE.md | less
 
 ---
 
-**Last Modified**: 2026-01-24  
+**Last Modified**: 2026-02-01  
 **Status**: ✅ Complete and Tested
 
 ---

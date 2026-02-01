@@ -1,4 +1,4 @@
-# Confronto: Fork v0.16.1 vs Nuovo v0.17.0 con Area-Based
+# Confronto: Fork v0.16.1 vs Nuovo v0.18.0 con Area-Based
 
 ## Architettura Window Control
 
@@ -12,7 +12,7 @@ await self._group.hass.services.async_call(
 )
 ```
 
-### Nuovo v0.17.0
+### Nuovo v0.18.0
 ```python
 # Usa il call handler con entity_ids opzionale
 await self.call_handler.call_immediate(
@@ -37,7 +37,7 @@ await self.call_handler.call_immediate(
 self._control_state = "open"  # o "close"
 ```
 
-### Nuovo v0.17.0
+### Nuovo v0.18.0
 ```python
 # Stato immutabile con metadata
 @property
@@ -67,7 +67,7 @@ self._group.config
 self._group.hvac_mode
 ```
 
-### Nuovo v0.17.0
+### Nuovo v0.18.0
 ```python
 # Accesso tramite proprietà
 self._hass
@@ -96,7 +96,7 @@ if window_id in self._timers:
     del self._timers[window_id]
 ```
 
-### Nuovo v0.17.0
+### Nuovo v0.18.0
 ```python
 # Stesso approccio per area-based
 self._timers: dict[str, Any] = {}
@@ -138,7 +138,7 @@ def _get_entity_area(self, entity_id: str) -> str | None:
     return None
 ```
 
-### Nuovo v0.17.0
+### Nuovo v0.18.0
 ```python
 def _get_entity_area(self, entity_id: str) -> str | None:
     ent_reg = er.async_get(self._hass)
@@ -185,7 +185,7 @@ async def _handle_window_opened(self, window_id: str) -> None:
         )
 ```
 
-### Nuovo v0.17.0
+### Nuovo v0.18.0
 ```python
 async def _handle_window_opened(self, window_id: str) -> None:
     # Verifica stato
@@ -230,7 +230,7 @@ async def _handle_window_closed(self, window_id: str) -> None:
         )
 ```
 
-### Nuovo v0.17.0
+### Nuovo v0.18.0
 ```python
 async def _handle_window_closed(self, window_id: str) -> None:
     # Verifica altre finestre aperte
@@ -272,7 +272,7 @@ async def _execute_action(self, mode: str) -> None:
         )
 ```
 
-### Nuovo v0.17.0
+### Nuovo v0.18.0
 ```python
 async def _execute_action(self, mode: str) -> None:
     self._control_state = mode
@@ -293,9 +293,9 @@ async def _execute_action(self, mode: str) -> None:
 
 ---
 
-## Riepilogo Vantaggi v0.17.0
+## Riepilogo Vantaggi v0.18.0
 
-| Aspetto | Fork v0.16.1 | Nuovo v0.17.0 |
+| Aspetto | Fork v0.16.1 | Nuovo v0.18.0 |
 |---------|--------------|---------------|
 | **Chiamate servizi** | Dirette | Via CallHandler |
 | **Retry logic** | ❌ No | ✅ Automatico |
@@ -311,11 +311,11 @@ async def _execute_action(self, mode: str) -> None:
 
 ## Conclusione
 
-La nuova implementazione v0.17.0:
+La nuova implementazione v0.18.0:
 - ✅ Mantiene tutta la funzionalità area-based
 - ✅ Migliora robustezza e affidabilità
 - ✅ Integra perfettamente con nuova architettura
 - ✅ Preserva backward compatibility
 - ✅ Codice più pulito e manutenibile
 
-**Raccomandazione:** Usa la nuova versione v0.17.0 per tutti i nuovi deployment.
+**Raccomandazione:** Usa la nuova versione v0.18.0 per tutti i nuovi deployment.

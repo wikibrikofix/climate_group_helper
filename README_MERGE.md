@@ -2,13 +2,13 @@
 
 ## ✅ Merge Completed Successfully
 
-The **Area-Based Window Control** feature has been successfully merged onto Climate Group Helper v0.17.0 architecture.
+The **Area-Based Window Control** feature has been successfully merged onto Climate Group Helper v0.18.0 architecture.
 
 ### What Was Done
 
 **5 Files Modified:**
 1. **const.py** - Area-based constants added
-2. **window_control.py** - Rewritten with v0.17.0 integration (16.3 KB)
+2. **window_control.py** - Rewritten with v0.18.0 integration (16.3 KB)
 3. **service_call.py** - WindowControlCallHandler modified (16.7 KB)
 4. **config_flow.py** - Dynamic UI implemented (24.4 KB)
 5. **strings.json** - Translations added
@@ -59,6 +59,6 @@ ha core logs | grep "WindowControl initialized"
 
 ---
 
-**Version**: 0.17.0 + Area-Based Window Control  
+**Version**: 0.18.0 + Area-Based Window Control  
 **Status**: ✅ Production Ready  
-**Date**: 2026-01-24
+**Date**: 2026-02-01
