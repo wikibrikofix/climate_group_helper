@@ -28,6 +28,9 @@ from .const import (
     CONF_HUMIDITY_UPDATE_TARGETS,
     CONF_HVAC_MODE_STRATEGY,
     CONF_IGNORE_OFF_MEMBERS,
+    CONF_OVERRIDE_DURATION,
+    CONF_PERSIST_CHANGES,
+    CONF_RESYNC_INTERVAL,
     CONF_RETRY_ATTEMPTS,
     CONF_RETRY_DELAY,
     CONF_ROOM_OPEN_DELAY,
@@ -40,6 +43,8 @@ from .const import (
     CONF_TEMP_TARGET_AVG,
     CONF_TEMP_TARGET_ROUND,
     CONF_TEMP_UPDATE_TARGETS,
+    CONF_TEMP_CALIBRATION_MODE,
+    CONF_CALIBRATION_HEARTBEAT,
     CONF_MIN_TEMP_OFF,
     CONF_WINDOW_MODE,
     CONF_WINDOW_SENSORS,
@@ -60,6 +65,7 @@ from .const import (
     SYNC_TARGET_ATTRS,
     AverageOption,
     RoundOption,
+    CalibrationMode,
     SyncMode,
     WindowControlMode,
 )
@@ -288,6 +294,30 @@ class ClimateGroupOptionsFlow(config_entries.OptionsFlow):
                         multiple=True,
                     )
                 ),
+                vol.Required(
+                    CONF_TEMP_CALIBRATION_MODE,
+                    default=current_config.get(
+                        CONF_TEMP_CALIBRATION_MODE, CalibrationMode.ABSOLUTE
+                    ),
+                ): selector.SelectSelector(
+                    selector.SelectSelectorConfig(
+                        options=[opt.value for opt in CalibrationMode],
+                        mode=selector.SelectSelectorMode.DROPDOWN,
+                        translation_key="temp_calibration_mode",
+                    )
+                ),
+                vol.Optional(
+                    CONF_CALIBRATION_HEARTBEAT,
+                    default=current_config.get(CONF_CALIBRATION_HEARTBEAT, 0),
+                ): selector.NumberSelector(
+                    selector.NumberSelectorConfig(
+                        min=0,
+                        max=120,
+                        step=1,
+                        unit_of_measurement="min",
+                        mode=selector.NumberSelectorMode.SLIDER,
+                    )
+                ),
             }
         )
 
@@ -478,7 +508,6 @@ class ClimateGroupOptionsFlow(config_entries.OptionsFlow):
         current_config = {**self._config_entry.options, **(user_input or {})}
 
         if user_input is not None:
-            # Clean up based on mode
             window_mode = user_input.get(CONF_WINDOW_MODE, WindowControlMode.OFF)
             
             if window_mode == WindowControlMode.AREA_BASED:
@@ -494,18 +523,16 @@ class ClimateGroupOptionsFlow(config_entries.OptionsFlow):
                 for key in [CONF_WINDOW_SENSORS, CONF_WINDOW_OPEN_DELAY]:
                     current_config.pop(key, None)
                 # Clear legacy sensors if empty
-                if CONF_ROOM_SENSOR not in user_input or not user_input.get(CONF_ROOM_SENSOR):
-                    current_config.pop(CONF_ROOM_SENSOR, None)
-                if CONF_ZONE_SENSOR not in user_input or not user_input.get(CONF_ZONE_SENSOR):
-                    current_config.pop(CONF_ZONE_SENSOR, None)
-                # Auto-disable if no sensors
+                for key in [CONF_ROOM_SENSOR, CONF_ZONE_SENSOR]:
+                    if key not in user_input or not user_input.get(key):
+                        current_config.pop(key, None)
+                # Auto-disable window control if no sensors configured
                 if CONF_ROOM_SENSOR not in current_config and CONF_ZONE_SENSOR not in current_config:
                     current_config[CONF_WINDOW_MODE] = WindowControlMode.OFF
             
             self._update_config_if_changed(current_config)
             return await self.async_step_schedule()
 
-        # Build dynamic schema based on current mode
         window_mode = current_config.get(CONF_WINDOW_MODE, WindowControlMode.OFF)
         
         schema_dict = {
@@ -544,8 +571,20 @@ class ClimateGroupOptionsFlow(config_entries.OptionsFlow):
                     mode=selector.NumberSelectorMode.SLIDER,
                 )
             )
-        # Legacy mode fields
-        elif window_mode == WindowControlMode.ON:
+            schema_dict[vol.Optional(
+                CONF_CLOSE_DELAY,
+                default=current_config.get(CONF_CLOSE_DELAY, DEFAULT_CLOSE_DELAY),
+            )] = selector.NumberSelector(
+                selector.NumberSelectorConfig(
+                    min=0,
+                    max=300,
+                    step=1,
+                    unit_of_measurement="s",
+                    mode=selector.NumberSelectorMode.SLIDER,
+                )
+            )
+        else:
+            # Legacy mode fields
             schema_dict[vol.Optional(
                 CONF_ROOM_SENSOR,
                 description={"suggested_value": current_config.get(CONF_ROOM_SENSOR)},
@@ -586,9 +625,6 @@ class ClimateGroupOptionsFlow(config_entries.OptionsFlow):
                     mode=selector.NumberSelectorMode.SLIDER,
                 )
             )
-
-        # Close delay (common to both modes)
-        if window_mode != WindowControlMode.OFF:
             schema_dict[vol.Optional(
                 CONF_CLOSE_DELAY,
                 default=current_config.get(CONF_CLOSE_DELAY, DEFAULT_CLOSE_DELAY),
@@ -602,9 +638,11 @@ class ClimateGroupOptionsFlow(config_entries.OptionsFlow):
                 )
             )
 
+        schema = vol.Schema(schema_dict)
+
         return self.async_show_form(
             step_id="window_control",
-            data_schema=vol.Schema(schema_dict),
+            data_schema=schema,
         )
 
     async def async_step_schedule(
@@ -631,6 +669,34 @@ class ClimateGroupOptionsFlow(config_entries.OptionsFlow):
                         domain="schedule",
                     )
                 ),
+                vol.Optional(
+                    CONF_RESYNC_INTERVAL,
+                    default=current_config.get(CONF_RESYNC_INTERVAL, 0),
+                ): selector.NumberSelector(
+                    selector.NumberSelectorConfig(
+                        min=0,
+                        max=120,
+                        step=1,
+                        unit_of_measurement="min",
+                        mode=selector.NumberSelectorMode.SLIDER,
+                    )
+                ),
+                vol.Optional(
+                    CONF_OVERRIDE_DURATION,
+                    default=current_config.get(CONF_OVERRIDE_DURATION, 0),
+                ): selector.NumberSelector(
+                    selector.NumberSelectorConfig(
+                        min=0,
+                        max=120,
+                        step=1,
+                        unit_of_measurement="min",
+                        mode=selector.NumberSelectorMode.SLIDER,
+                    )
+                ),
+                vol.Optional(
+                    CONF_PERSIST_CHANGES,
+                    default=current_config.get(CONF_PERSIST_CHANGES, False),
+                ): bool,
             }
         )
 
