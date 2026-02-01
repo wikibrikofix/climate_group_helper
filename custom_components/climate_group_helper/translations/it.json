@@ -219,6 +219,8 @@
           "room_open_delay": "Ritardo Apertura Stanza (s)",
           "room_sensor": "Sensore Finestra Stanza",
           "window_mode": "Mod. Controllo Finestre",
+          "window_open_delay": "Ritardo Apertura Finestra (s)",
+          "window_sensors": "Sensori Finestre/Porte (Area-based)",
           "zone_open_delay": "Ritardo Apertura Zona (s)",
           "zone_sensor": "Sensore Finestra Zona"
         },
@@ -227,6 +229,8 @@
           "room_open_delay": "Tempo di attesa dopo apertura finestra stanza.",
           "room_sensor": "Sensore binario per la finestra della stanza. Attiva il ritardo breve.",
           "window_mode": "Abilita il gruppo in base ai sensori. HVAC va su 'off' quando le finestre sono aperte.",
+          "window_open_delay": "Tempo di attesa dopo apertura finestra prima di spegnere i termostati in quell'area.",
+          "window_sensors": "Seleziona più sensori finestre/porte. I termostati nella stessa area verranno controllati automaticamente.",
           "zone_open_delay": "Tempo di attesa dopo apertura finestra zona.",
           "zone_sensor": "Sensore binario per altre finestre nella zona. Attiva il ritardo lungo."
         },
@@ -325,7 +329,8 @@
     "window_mode": {
       "options": {
         "off": "Spento – Il controllo finestre è disattivato",
-        "on": "Acceso – Il controllo finestre è attivato"
+        "on": "Acceso – Il controllo finestre è attivato",
+        "area_based": "Basato su Aree – Rilevamento automatico zone"
       }
     }
   },
