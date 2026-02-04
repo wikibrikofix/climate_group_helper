@@ -250,7 +250,8 @@
     "window_mode": {
       "options": {
         "off": "Apagado – El control de ventanas está desactivado",
-        "on": "Encendido – El control de ventanas está activado"
+        "on": "Encendido – El control de ventanas está activado",
+        "area_based": "Por Área – Controla termostatos por área cuando se abren ventanas"
       }
     },
     "hvac_mode_strategy": {

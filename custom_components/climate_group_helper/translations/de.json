@@ -250,7 +250,8 @@
     "window_mode": {
       "options": {
         "off": "Aus – Fenstersteuerung ist deaktiviert",
-        "on": "Ein – Fenstersteuerung ist aktiviert"
+        "on": "Ein – Fenstersteuerung ist aktiviert",
+        "area_based": "Bereichsbasiert – Thermostate nach Bereich steuern wenn Fenster öffnen"
       }
     },
     "hvac_mode_strategy": {

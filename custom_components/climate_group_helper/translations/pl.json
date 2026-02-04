@@ -250,7 +250,8 @@
     "window_mode": {
       "options": {
         "off": "Wył. – Sterowanie oknami jest wyłączone",
-        "on": "Wł. – Sterowanie oknami jest włączone"
+        "on": "Wł. – Sterowanie oknami jest włączone",
+        "area_based": "Area-Based – Control thermostats by area when windows open"
       }
     },
     "hvac_mode_strategy": {

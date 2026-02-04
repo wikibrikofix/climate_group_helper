@@ -250,7 +250,8 @@
     "window_mode": {
       "options": {
         "off": "Av – Vinduskontroll er deaktivert",
-        "on": "På – Vinduskontroll er aktivert"
+        "on": "På – Vinduskontroll er aktivert",
+        "area_based": "Områdebasert – Kontroller termostater etter område når vinduer åpnes"
       }
     },
     "hvac_mode_strategy": {

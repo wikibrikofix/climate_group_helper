@@ -250,7 +250,8 @@
     "window_mode": {
       "options": {
         "off": "Fra – Vinduesstyring er deaktiveret",
-        "on": "Til – Vinduesstyring er aktiveret"
+        "on": "Til – Vinduesstyring er aktiveret",
+        "area_based": "Områdebaseret – Kontroller termostater efter område når vinduer åbnes"
       }
     },
     "hvac_mode_strategy": {

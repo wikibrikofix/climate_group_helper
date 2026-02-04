@@ -250,7 +250,8 @@
     "window_mode": {
       "options": {
         "off": "Vypnuto – Ovládání oken je deaktivováno",
-        "on": "Zapnuto – Ovládání oken je povoleno"
+        "on": "Zapnuto – Ovládání oken je povoleno",
+        "area_based": "Area-Based – Control thermostats by area when windows open"
       }
     },
     "hvac_mode_strategy": {

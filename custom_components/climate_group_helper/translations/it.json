@@ -250,7 +250,8 @@
     "window_mode": {
       "options": {
         "off": "Spento – Il controllo finestre è disattivato",
-        "on": "Acceso – Il controllo finestre è attivato"
+        "on": "Acceso – Il controllo finestre è attivato",
+        "area_based": "Per Area – Controlla termostati per area quando si aprono finestre"
       }
     },
     "hvac_mode_strategy": {

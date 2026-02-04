@@ -250,7 +250,8 @@
     "window_mode": {
       "options": {
         "off": "Desligado – O controle de janela está desativado",
-        "on": "Ligado – O controle de janela está ativado"
+        "on": "Ligado – O controle de janela está ativado",
+        "area_based": "Area-Based – Control thermostats by area when windows open"
       }
     },
     "hvac_mode_strategy": {

@@ -250,7 +250,8 @@
     "window_mode": {
       "options": {
         "off": "Désactivé – Le contrôle des fenêtres est désactivé",
-        "on": "Activé – Le contrôle des fenêtres est activé"
+        "on": "Activé – Le contrôle des fenêtres est activé",
+        "area_based": "Par Zone – Contrôle thermostats par zone quand fenêtres s'ouvrent"
       }
     },
     "hvac_mode_strategy": {

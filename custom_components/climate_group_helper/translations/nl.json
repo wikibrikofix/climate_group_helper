@@ -250,7 +250,8 @@
     "window_mode": {
       "options": {
         "off": "Uit – Raambediening is uitgeschakeld",
-        "on": "Aan – Raambediening is ingeschakeld"
+        "on": "Aan – Raambediening is ingeschakeld",
+        "area_based": "Per Gebied – Bedien thermostaten per gebied wanneer ramen openen"
       }
     },
     "hvac_mode_strategy": {
