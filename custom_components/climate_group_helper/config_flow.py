@@ -1,4 +1,5 @@
 """Config flow for Climate Group helper integration."""
+
 from __future__ import annotations
 
 import logging
@@ -35,6 +36,8 @@ from .const import (
     CONF_RETRY_DELAY,
     CONF_ROOM_OPEN_DELAY,
     CONF_ROOM_SENSOR,
+    CONF_WINDOW_SENSORS,
+    CONF_WINDOW_OPEN_DELAY,
     CONF_SCHEDULE_ENTITY,
     CONF_SYNC_ATTRS,
     CONF_SYNC_MODE,
@@ -47,8 +50,6 @@ from .const import (
     CONF_CALIBRATION_HEARTBEAT,
     CONF_MIN_TEMP_OFF,
     CONF_WINDOW_MODE,
-    CONF_WINDOW_SENSORS,
-    CONF_WINDOW_OPEN_DELAY,
     CONF_ZONE_OPEN_DELAY,
     CONF_ZONE_SENSOR,
     DEFAULT_CLOSE_DELAY,
@@ -231,12 +232,20 @@ class ClimateGroupOptionsFlow(config_entries.OptionsFlow):
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
         """Manage temperature settings."""
+        errors: dict[str, str] = {}
         current_config = {**self._config_entry.options, **(user_input or {})}
 
         if user_input is not None:
-            self._update_config_if_changed(current_config)
-            # Auto-navigate to next step
-            return await self.async_step_humidity()
+            # Validate: Calibration targets require external sensors
+            if current_config.get(CONF_TEMP_UPDATE_TARGETS) and not current_config.get(
+                CONF_TEMP_SENSORS
+            ):
+                errors[CONF_TEMP_UPDATE_TARGETS] = "calibration_requires_sensors"
+
+            if not errors:
+                self._update_config_if_changed(current_config)
+                # Auto-navigate to next step
+                return await self.async_step_humidity()
 
         schema = vol.Schema(
             {
@@ -324,6 +333,7 @@ class ClimateGroupOptionsFlow(config_entries.OptionsFlow):
         return self.async_show_form(
             step_id="temperature",
             data_schema=schema,
+            errors=errors,
         )
 
     async def async_step_humidity(
@@ -428,7 +438,7 @@ class ClimateGroupOptionsFlow(config_entries.OptionsFlow):
                 ),
                 vol.Optional(
                     CONF_RETRY_ATTEMPTS,
-                    default=current_config.get(CONF_RETRY_ATTEMPTS, 1),
+                    default=current_config.get(CONF_RETRY_ATTEMPTS, 0),
                 ): selector.NumberSelector(
                     selector.NumberSelectorConfig(
                         min=0,
@@ -482,9 +492,7 @@ class ClimateGroupOptionsFlow(config_entries.OptionsFlow):
                 ),
                 vol.Required(
                     CONF_SYNC_ATTRS,
-                    default=current_config.get(
-                        CONF_SYNC_ATTRS, SYNC_TARGET_ATTRS
-                    ),
+                    default=current_config.get(CONF_SYNC_ATTRS, SYNC_TARGET_ATTRS),
                 ): selector.SelectSelector(
                     selector.SelectSelectorConfig(
                         options=SYNC_TARGET_ATTRS,
@@ -493,6 +501,10 @@ class ClimateGroupOptionsFlow(config_entries.OptionsFlow):
                         translation_key="sync_attributes",
                     )
                 ),
+                vol.Optional(
+                    CONF_IGNORE_OFF_MEMBERS,
+                    default=current_config.get(CONF_IGNORE_OFF_MEMBERS, False),
+                ): bool,
             }
         )
 
@@ -504,7 +516,7 @@ class ClimateGroupOptionsFlow(config_entries.OptionsFlow):
     async def async_step_window_control(
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
-        """Manage window control settings."""
+        """Manage window control settings with area-based support."""
         current_config = {**self._config_entry.options, **(user_input or {})}
 
         if user_input is not None:
@@ -653,9 +665,11 @@ class ClimateGroupOptionsFlow(config_entries.OptionsFlow):
 
         if user_input is not None:
             # If user clears the schedule entity field, remove it from config
-            if CONF_SCHEDULE_ENTITY not in user_input or not user_input.get(CONF_SCHEDULE_ENTITY):
+            if CONF_SCHEDULE_ENTITY not in user_input or not user_input.get(
+                CONF_SCHEDULE_ENTITY
+            ):
                 current_config.pop(CONF_SCHEDULE_ENTITY, None)
-            
+
             self._update_config_if_changed(current_config)
             return await self.async_step_other()
 
@@ -663,7 +677,9 @@ class ClimateGroupOptionsFlow(config_entries.OptionsFlow):
             {
                 vol.Optional(
                     CONF_SCHEDULE_ENTITY,
-                    description={"suggested_value": current_config.get(CONF_SCHEDULE_ENTITY)},
+                    description={
+                        "suggested_value": current_config.get(CONF_SCHEDULE_ENTITY)
+                    },
                 ): selector.EntitySelector(
                     selector.EntitySelectorConfig(
                         domain="schedule",
@@ -723,10 +739,6 @@ class ClimateGroupOptionsFlow(config_entries.OptionsFlow):
                 vol.Optional(
                     CONF_EXPOSE_MEMBER_ENTITIES,
                     default=current_config.get(CONF_EXPOSE_MEMBER_ENTITIES, False),
-                ): bool,
-                vol.Optional(
-                    CONF_IGNORE_OFF_MEMBERS,
-                    default=current_config.get(CONF_IGNORE_OFF_MEMBERS, False),
                 ): bool,
                 vol.Optional(
                     CONF_MIN_TEMP_OFF,
