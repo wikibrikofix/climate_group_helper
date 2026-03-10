@@ -438,35 +438,32 @@ class ClimateGroupOptionsFlow(config_entries.OptionsFlow):
             ),
         }
 
-        # Area-based mode fields
-        if window_mode == WindowControlMode.AREA_BASED:
-            _LOGGER.debug("Adding area-based fields to schema")
-            schema_dict[vol.Required(CONF_WINDOW_SENSORS, default=config.get(CONF_WINDOW_SENSORS, []))] = selector.EntitySelector(
-                selector.EntitySelectorConfig(domain="binary_sensor", multiple=True)
-            )
-            schema_dict[vol.Required(CONF_WINDOW_OPEN_DELAY, default=config.get(CONF_WINDOW_OPEN_DELAY, DEFAULT_WINDOW_OPEN_DELAY))] = selector.NumberSelector(
-                selector.NumberSelectorConfig(min=0, max=120, step=1, unit_of_measurement="s", mode=selector.NumberSelectorMode.SLIDER)
-            )
-        # Legacy mode fields
-        elif window_mode == WindowControlMode.ON:
-            schema_dict[vol.Optional(CONF_ROOM_SENSOR, description={"suggested_value": config.get(CONF_ROOM_SENSOR)})] = selector.EntitySelector(
-                selector.EntitySelectorConfig(domain="binary_sensor")
-            )
-            schema_dict[vol.Optional(CONF_ZONE_SENSOR, description={"suggested_value": config.get(CONF_ZONE_SENSOR)})] = selector.EntitySelector(
-                selector.EntitySelectorConfig(domain="binary_sensor")
-            )
-            schema_dict[vol.Optional(CONF_ROOM_OPEN_DELAY, default=config.get(CONF_ROOM_OPEN_DELAY, DEFAULT_ROOM_OPEN_DELAY))] = selector.NumberSelector(
-                selector.NumberSelectorConfig(min=0, max=120, step=1, unit_of_measurement="s", mode=selector.NumberSelectorMode.SLIDER)
-            )
-            schema_dict[vol.Optional(CONF_ZONE_OPEN_DELAY, default=config.get(CONF_ZONE_OPEN_DELAY, DEFAULT_ZONE_OPEN_DELAY))] = selector.NumberSelector(
-                selector.NumberSelectorConfig(min=1, max=900, step=5, unit_of_measurement="s", mode=selector.NumberSelectorMode.SLIDER)
-            )
+        # Area-based mode fields (always show)
+        schema_dict[vol.Optional(CONF_WINDOW_SENSORS, default=config.get(CONF_WINDOW_SENSORS, []))] = selector.EntitySelector(
+            selector.EntitySelectorConfig(domain="binary_sensor", multiple=True)
+        )
+        schema_dict[vol.Optional(CONF_WINDOW_OPEN_DELAY, default=config.get(CONF_WINDOW_OPEN_DELAY, DEFAULT_WINDOW_OPEN_DELAY))] = selector.NumberSelector(
+            selector.NumberSelectorConfig(min=0, max=120, step=1, unit_of_measurement="s", mode=selector.NumberSelectorMode.SLIDER)
+        )
+        
+        # Legacy mode fields (always show)
+        schema_dict[vol.Optional(CONF_ROOM_SENSOR, description={"suggested_value": config.get(CONF_ROOM_SENSOR)})] = selector.EntitySelector(
+            selector.EntitySelectorConfig(domain="binary_sensor")
+        )
+        schema_dict[vol.Optional(CONF_ZONE_SENSOR, description={"suggested_value": config.get(CONF_ZONE_SENSOR)})] = selector.EntitySelector(
+            selector.EntitySelectorConfig(domain="binary_sensor")
+        )
+        schema_dict[vol.Optional(CONF_ROOM_OPEN_DELAY, default=config.get(CONF_ROOM_OPEN_DELAY, DEFAULT_ROOM_OPEN_DELAY))] = selector.NumberSelector(
+            selector.NumberSelectorConfig(min=0, max=120, step=1, unit_of_measurement="s", mode=selector.NumberSelectorMode.SLIDER)
+        )
+        schema_dict[vol.Optional(CONF_ZONE_OPEN_DELAY, default=config.get(CONF_ZONE_OPEN_DELAY, DEFAULT_ZONE_OPEN_DELAY))] = selector.NumberSelector(
+            selector.NumberSelectorConfig(min=1, max=900, step=5, unit_of_measurement="s", mode=selector.NumberSelectorMode.SLIDER)
+        )
 
         # Close delay (common to both modes)
-        if window_mode != WindowControlMode.OFF:
-            schema_dict[vol.Optional(CONF_CLOSE_DELAY, default=config.get(CONF_CLOSE_DELAY, DEFAULT_CLOSE_DELAY))] = selector.NumberSelector(
-                selector.NumberSelectorConfig(min=0, max=300, step=1, unit_of_measurement="s", mode=selector.NumberSelectorMode.SLIDER)
-            )
+        schema_dict[vol.Optional(CONF_CLOSE_DELAY, default=config.get(CONF_CLOSE_DELAY, DEFAULT_CLOSE_DELAY))] = selector.NumberSelector(
+            selector.NumberSelectorConfig(min=0, max=300, step=1, unit_of_measurement="s", mode=selector.NumberSelectorMode.SLIDER)
+        )
 
         return {
             vol.Required("window_section"): section(
