@@ -1,4 +1,22 @@
-# Climate Group Helper
+# Climate Group Helper - Area-Based Fork
+
+> [!WARNING]
+> **EXPERIMENTAL FORK - USE AT YOUR OWN RISK**
+> 
+> This is an **unofficial, experimental fork** with custom modifications.
+> 
+> - ❌ **NOT OFFICIALLY SUPPORTED** - This fork is not maintained by the original author
+> - ❌ **NO SUPPORT PROVIDED** - No support, bug fixes, or updates guaranteed
+> - ❌ **USE AT YOUR OWN RISK** - Experimental code for personal use only
+> - ⚠️ **MAY BECOME OUTDATED** - May not receive updates when upstream changes
+> 
+> **For the official, supported version**, please use:  
+> 👉 https://github.com/bjrnptrsn/climate_group_helper
+
+---
+
+> [!NOTE]
+> **Custom Feature:** This fork adds **Area-Based Window Control** for granular per-area thermostat management. See [Window Control](#window-control) section for details.
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/bjrnptrsn/climate_group_helper/main/assets/icon@2x.png" alt="Climate Group Helper Icon" width="192"/>
@@ -90,15 +108,41 @@ Beyond basic group control, you can mirror changes bidirectionally, enforce stri
 
 Binary sensor support to automatically turn off heating when a window opens and restore it when it closes.
 
-*   **Binary Sensors:** Use native HA binary sensors (or groups) for reaction.
+#### Window Control Modes
+
+**Legacy Mode (Room + Zone Sensors):**
 *   **Room + Zone Sensors:** Supports fast-reacting room sensors vs. slow-reacting zone sensors (e.g. for whole floors).
 *   **Configurable Delays:** Set custom reaction times for opening and closing.
+
+**Area-Based Mode (Recommended):**
+*   **Granular Control:** Only thermostats in the same area as the opened window are affected.
+*   **Automatic Detection:** Uses Home Assistant's area registry to automatically associate windows with thermostats.
+*   **Multi-Window Support:** Handles multiple windows in different areas simultaneously.
+*   **Independent Timers:** Each window has its own delay timer.
+*   **Smart Restore:** Restores only when all windows in the area are closed.
+
+#### Common Options
+
 *   **Window Action:** Choose between full `off` or a configurable temperature setpoint.
 *   **Blocking:** While windows are open, manual changes are blocked. Schedule changes are accepted internally and applied when windows close.
 *   **Adopt Manual Changes:** Optionally allow passive tracking:
     *   **Off (Default):** All manual changes are blocked and discarded.
     *   **All:** Any manual change updates the target state. Applied when windows close.
     *   **Master Only:** *(Requires Master Entity)* Only changes on the Master update the target state.
+
+#### Area-Based Configuration
+
+1. **Assign Areas:** Ensure windows and thermostats are assigned to areas in Home Assistant (Settings > Areas).
+2. **Select Mode:** Choose `Area-based` in Window Control settings.
+3. **Select Sensors:** Add all window sensors to monitor.
+4. **Configure Delays:** Set window open delay (default: 15s) and close delay (default: 30s).
+
+**Example Behavior:**
+- Area "Living Room": `binary_sensor.living_room_window`, `climate.living_room_thermostat`
+- Area "Bedroom": `binary_sensor.bedroom_window`, `climate.bedroom_thermostat`
+- Open living room window → only living room thermostat turns off
+- Open bedroom window → only bedroom thermostat turns off
+- Close windows → respective thermostats restore independently
 
 ### Schedule Automation
 
@@ -188,12 +232,15 @@ The configuration is organized into a wizard-style flow. Use the **Configure** b
 
 | Option | Description |
 |--------|-------------|
+| **Window Mode** | **Off** (disabled), **On** (legacy room/zone mode), or **Area-based** (automatic area detection). |
 | **Window Action** | **Turn Off** (Default) or **Set Temperature**. Useful for frost protection. |
 | **Adopt Manual Changes** | **Off** (block all), **All** (passive tracking for all members), or **Master Only** *(requires Master Entity)*. |
 | **Window Temperature** | Target temperature to set when 'Set Temperature' action is selected. |
-| **Room Sensor** | (Optional) Binary sensor for fast reaction (window in the same room). |
-| **Zone Sensor** | (Optional) Binary sensor for slow reaction (e.g. apartment or floor). Room sensor should be part of zone sensor group. Active zone sensor prevents the group from being switched back on. |
-| **Room/Zone Delay** | Time before turning off heating (default: 15s / 5min). |
+| **Window Sensors** | *(Area-based mode)* Select all window sensors to monitor. Only thermostats in the same area will be affected. |
+| **Window Open Delay** | *(Area-based mode)* Time before turning off heating after a window opens (default: 15s). |
+| **Room Sensor** | *(Legacy mode)* Binary sensor for fast reaction (window in the same room). |
+| **Zone Sensor** | *(Legacy mode)* Binary sensor for slow reaction (e.g. apartment or floor). Room sensor should be part of zone sensor group. Active zone sensor prevents the group from being switched back on. |
+| **Room/Zone Delay** | *(Legacy mode)* Time before turning off heating (default: 15s / 5min). |
 | **Close Delay** | Time before restoring heating after windows close (default: 30s). |
 
 ### Schedule Automation

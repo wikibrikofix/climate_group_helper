@@ -116,6 +116,8 @@
               "window_adopt_manual_changes": "Adopt Manual Changes",
               "window_action": "Window Open Action",
               "window_temperature": "Window Open Temperature",
+              "window_sensors": "Window Sensors (Area-based)",
+              "window_open_delay": "Window Open Delay (seconds)",
               "room_sensor": "Room Window Sensor",
               "zone_sensor": "Zone Window Sensor",
               "room_open_delay": "Room Open Delay (seconds)",
@@ -127,6 +129,8 @@
               "window_adopt_manual_changes": "Allow target state changes while windows are open.",
               "window_action": "What to do when window opens: Turn Off completely or set a specific Temperature (e.g. frost protection).",
               "window_temperature": "Target temperature to set when 'Temperature' action is selected.",
+              "window_sensors": "Select all window sensors to monitor. When a window opens, only climate devices in the same area will be turned off.",
+              "window_open_delay": "Time to wait before turning off heating after a window opens.",
               "room_sensor": "(Optional) Binary sensor for the room's own window/door.",
               "zone_sensor": "(Optional) Binary sensor for windows/doors in the zone/floor. Zone sensor should include room sensor.",
               "room_open_delay": "Time to wait after room window opens before turning off heating.",
@@ -283,7 +287,8 @@
     "window_mode": {
       "options": {
         "off": "Off – Window control is disabled",
-        "on": "On – Window control is enabled"
+        "on": "On – Window control is enabled",
+        "area_based": "Area-based – Automatic zone detection"
       }
     },
     "window_adopt_manual_changes": {

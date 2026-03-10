@@ -533,6 +533,8 @@ class SyncCallHandler(BaseServiceCallHandler):
 class WindowControlCallHandler(BaseServiceCallHandler):
     """Call handler for Window Control operations.
 
+    Supports optional entity_ids parameter for area-based control.
+    
     No overrides needed — Window Control always uses call_immediate() with
     explicit data (hvac_mode=OFF or temperature). All blocking/filtering
     is bypassed by design.
@@ -543,6 +545,26 @@ class WindowControlCallHandler(BaseServiceCallHandler):
     def __init__(self, group: ClimateGroup):
         """Initialize the window control call handler."""
         super().__init__(group)
+        self._target_entity_ids: list[str] | None = None
+
+    async def call_immediate(self, data: dict[str, Any] | None = None, entity_ids: list[str] | None = None) -> None:
+        """Execute a service call immediately, optionally targeting specific entities.
+        
+        Args:
+            data: Optional data dict with attributes to set
+            entity_ids: Optional list of entity IDs to target (for area-based control)
+        """
+        self._target_entity_ids = entity_ids
+        try:
+            await self._execute_calls(data)
+        finally:
+            self._target_entity_ids = None
+
+    def _get_call_entity_ids(self, attr: str, value: Any = None) -> list[str]:  # noqa: ARG002
+        """Return target entity IDs if set, otherwise all members."""
+        if self._target_entity_ids is not None:
+            return self._target_entity_ids
+        return self._group.climate_entity_ids
 
 
 class ScheduleCallHandler(BaseServiceCallHandler):

@@ -61,11 +61,14 @@ from .const import (
     CONF_WINDOW_TEMPERATURE,
     CONF_WINDOW_ADOPT_MANUAL_CHANGES,
     CONF_WINDOW_MODE,
+    CONF_WINDOW_SENSORS,
+    CONF_WINDOW_OPEN_DELAY,
     CONF_ZONE_OPEN_DELAY,
     CONF_ZONE_SENSOR,
     DEFAULT_CLOSE_DELAY,
     DEFAULT_NAME,
     DEFAULT_ROOM_OPEN_DELAY,
+    DEFAULT_WINDOW_OPEN_DELAY,
     DEFAULT_ZONE_OPEN_DELAY,
     DOMAIN,
     FEATURE_STRATEGY_INTERSECTION,
@@ -213,8 +216,23 @@ class ClimateGroupOptionsFlow(config_entries.OptionsFlow):
             current_config.pop(CONF_TEMP_UPDATE_TARGETS, None)
 
         # Window Control Logic
-        if not current_config.get(CONF_ROOM_SENSOR) and not current_config.get(CONF_ZONE_SENSOR):
-            current_config[CONF_WINDOW_MODE] = WindowControlMode.OFF
+        window_mode = current_config.get(CONF_WINDOW_MODE, WindowControlMode.OFF)
+        
+        if window_mode == WindowControlMode.AREA_BASED:
+            # Remove legacy config
+            for key in [CONF_ROOM_SENSOR, CONF_ZONE_SENSOR, CONF_ROOM_OPEN_DELAY, CONF_ZONE_OPEN_DELAY]:
+                current_config.pop(key, None)
+            # Clear window_sensors if empty
+            if not current_config.get(CONF_WINDOW_SENSORS):
+                current_config.pop(CONF_WINDOW_SENSORS, None)
+                current_config[CONF_WINDOW_MODE] = WindowControlMode.OFF
+        else:
+            # Remove area-based config
+            for key in [CONF_WINDOW_SENSORS, CONF_WINDOW_OPEN_DELAY]:
+                current_config.pop(key, None)
+            # Auto-disable if no sensors
+            if not current_config.get(CONF_ROOM_SENSOR) and not current_config.get(CONF_ZONE_SENSOR):
+                current_config[CONF_WINDOW_MODE] = WindowControlMode.OFF
 
         # Clean up empty strings/lists for sensors
         for key in [CONF_ROOM_SENSOR, CONF_ZONE_SENSOR, CONF_SCHEDULE_ENTITY]:
@@ -388,41 +406,60 @@ class ClimateGroupOptionsFlow(config_entries.OptionsFlow):
         except (ValueError, KeyError):
             adopt_val = AdoptManualChanges.OFF
 
+        # Build dynamic schema based on window mode
+        window_mode = config.get(CONF_WINDOW_MODE, WindowControlMode.OFF)
+        
+        schema_dict = {
+            vol.Required(CONF_WINDOW_MODE, default=window_mode): selector.SelectSelector(
+                selector.SelectSelectorConfig(options=[opt.value for opt in WindowControlMode], mode=selector.SelectSelectorMode.DROPDOWN, translation_key="window_mode")
+            ),
+            vol.Required(CONF_WINDOW_ADOPT_MANUAL_CHANGES, default=adopt_val): selector.SelectSelector(
+                selector.SelectSelectorConfig(
+                    options=adopt_options,
+                    mode=selector.SelectSelectorMode.DROPDOWN,
+                    translation_key="window_adopt_manual_changes",
+                )
+            ),
+            vol.Required(CONF_WINDOW_ACTION, default=config.get(CONF_WINDOW_ACTION, WindowControlAction.OFF)): selector.SelectSelector(
+                selector.SelectSelectorConfig(options=[opt.value for opt in WindowControlAction], mode=selector.SelectSelectorMode.DROPDOWN, translation_key="window_action")
+            ),
+            vol.Optional(CONF_WINDOW_TEMPERATURE, description={"suggested_value": config.get(CONF_WINDOW_TEMPERATURE)}): selector.NumberSelector(
+                selector.NumberSelectorConfig(min=self._min_temp, max=self._max_temp, step=0.5, unit_of_measurement="°C", mode=selector.NumberSelectorMode.SLIDER)
+            ),
+        }
+
+        # Area-based mode fields
+        if window_mode == WindowControlMode.AREA_BASED:
+            schema_dict[vol.Optional(CONF_WINDOW_SENSORS, description={"suggested_value": config.get(CONF_WINDOW_SENSORS, [])})] = selector.EntitySelector(
+                selector.EntitySelectorConfig(domain="binary_sensor", multiple=True)
+            )
+            schema_dict[vol.Optional(CONF_WINDOW_OPEN_DELAY, default=config.get(CONF_WINDOW_OPEN_DELAY, DEFAULT_WINDOW_OPEN_DELAY))] = selector.NumberSelector(
+                selector.NumberSelectorConfig(min=0, max=120, step=1, unit_of_measurement="s", mode=selector.NumberSelectorMode.SLIDER)
+            )
+        # Legacy mode fields
+        elif window_mode == WindowControlMode.ON:
+            schema_dict[vol.Optional(CONF_ROOM_SENSOR, description={"suggested_value": config.get(CONF_ROOM_SENSOR)})] = selector.EntitySelector(
+                selector.EntitySelectorConfig(domain="binary_sensor")
+            )
+            schema_dict[vol.Optional(CONF_ZONE_SENSOR, description={"suggested_value": config.get(CONF_ZONE_SENSOR)})] = selector.EntitySelector(
+                selector.EntitySelectorConfig(domain="binary_sensor")
+            )
+            schema_dict[vol.Optional(CONF_ROOM_OPEN_DELAY, default=config.get(CONF_ROOM_OPEN_DELAY, DEFAULT_ROOM_OPEN_DELAY))] = selector.NumberSelector(
+                selector.NumberSelectorConfig(min=0, max=120, step=1, unit_of_measurement="s", mode=selector.NumberSelectorMode.SLIDER)
+            )
+            schema_dict[vol.Optional(CONF_ZONE_OPEN_DELAY, default=config.get(CONF_ZONE_OPEN_DELAY, DEFAULT_ZONE_OPEN_DELAY))] = selector.NumberSelector(
+                selector.NumberSelectorConfig(min=1, max=900, step=5, unit_of_measurement="s", mode=selector.NumberSelectorMode.SLIDER)
+            )
+
+        # Close delay (common to both modes)
+        if window_mode != WindowControlMode.OFF:
+            schema_dict[vol.Optional(CONF_CLOSE_DELAY, default=config.get(CONF_CLOSE_DELAY, DEFAULT_CLOSE_DELAY))] = selector.NumberSelector(
+                selector.NumberSelectorConfig(min=0, max=300, step=1, unit_of_measurement="s", mode=selector.NumberSelectorMode.SLIDER)
+            )
+
         return {
             vol.Required("window_section"): section(
-                vol.Schema({
-                    vol.Required(CONF_WINDOW_MODE, default=config.get(CONF_WINDOW_MODE, WindowControlMode.OFF)): selector.SelectSelector(
-                        selector.SelectSelectorConfig(options=[opt.value for opt in WindowControlMode], mode=selector.SelectSelectorMode.DROPDOWN, translation_key="window_mode")
-                    ),
-                    vol.Required(CONF_WINDOW_ADOPT_MANUAL_CHANGES, default=adopt_val): selector.SelectSelector(
-                        selector.SelectSelectorConfig(
-                            options=adopt_options,
-                            mode=selector.SelectSelectorMode.DROPDOWN,
-                            translation_key="window_adopt_manual_changes",
-                        )
-                    ),
-                    vol.Required(CONF_WINDOW_ACTION, default=config.get(CONF_WINDOW_ACTION, WindowControlAction.OFF)): selector.SelectSelector(
-                        selector.SelectSelectorConfig(options=[opt.value for opt in WindowControlAction], mode=selector.SelectSelectorMode.DROPDOWN, translation_key="window_action")
-                    ),
-                    vol.Optional(CONF_WINDOW_TEMPERATURE, description={"suggested_value": config.get(CONF_WINDOW_TEMPERATURE)}): selector.NumberSelector(
-                        selector.NumberSelectorConfig(min=self._min_temp, max=self._max_temp, step=0.5, unit_of_measurement="°C", mode=selector.NumberSelectorMode.SLIDER)
-                    ),
-                    vol.Optional(CONF_ROOM_SENSOR, description={"suggested_value": config.get(CONF_ROOM_SENSOR)}): selector.EntitySelector(
-                        selector.EntitySelectorConfig(domain="binary_sensor")
-                    ),
-                    vol.Optional(CONF_ZONE_SENSOR, description={"suggested_value": config.get(CONF_ZONE_SENSOR)}): selector.EntitySelector(
-                        selector.EntitySelectorConfig(domain="binary_sensor")
-                    ),
-                    vol.Optional(CONF_ROOM_OPEN_DELAY, default=config.get(CONF_ROOM_OPEN_DELAY, DEFAULT_ROOM_OPEN_DELAY)): selector.NumberSelector(
-                        selector.NumberSelectorConfig(min=0, max=120, step=1, unit_of_measurement="s", mode=selector.NumberSelectorMode.SLIDER)
-                    ),
-                    vol.Optional(CONF_ZONE_OPEN_DELAY, default=config.get(CONF_ZONE_OPEN_DELAY, DEFAULT_ZONE_OPEN_DELAY)): selector.NumberSelector(
-                        selector.NumberSelectorConfig(min=1, max=900, step=5, unit_of_measurement="s", mode=selector.NumberSelectorMode.SLIDER)
-                    ),
-                    vol.Optional(CONF_CLOSE_DELAY, default=config.get(CONF_CLOSE_DELAY, DEFAULT_CLOSE_DELAY)): selector.NumberSelector(
-                        selector.NumberSelectorConfig(min=0, max=300, step=1, unit_of_measurement="s", mode=selector.NumberSelectorMode.SLIDER)
-                    ),
-                }),
+                vol.Schema(schema_dict),
                 {"collapsed": not config.get(CONF_EXPAND_SECTIONS)}
             )
         }

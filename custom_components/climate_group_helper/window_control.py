@@ -1,4 +1,30 @@
-"""Window control handler for automatic heating shutdown when windows open."""
+"""Window control handler for automatic heating shutdown when windows open.
+
+CUSTOM MODIFICATION: Area-Based Window Control
+===============================================
+This file has been modified to support area-based window control in addition to
+the legacy room/zone sensor mode.
+
+Key Changes from base version:
+1. Added area-based configuration (CONF_WINDOW_SENSORS, CONF_WINDOW_OPEN_DELAY)
+2. Implemented _area_based_listener for per-window event handling
+3. Added _handle_window_opened/_handle_window_closed for area-specific control
+4. Added _get_entity_area for automatic area detection via registry
+5. Added _get_thermostats_in_area for finding members by area
+6. Integrated with architecture (call_handler, target_state)
+
+Architecture Integration:
+- Uses self.call_handler.call_immediate(entity_ids=...) for targeted control
+- Respects self.target_state for restoration
+- Compatible with state management system
+
+Backward Compatibility:
+- Legacy mode (room/zone sensors) fully preserved
+- Automatic config cleanup when switching modes
+
+Date: 2026-03-10
+Version: Area-Based Window Control
+"""
 from __future__ import annotations
 
 import logging
@@ -6,21 +32,25 @@ import time
 from typing import TYPE_CHECKING, Any
 
 from homeassistant.components.climate import HVACMode
-from homeassistant.const import STATE_ON, STATE_OPEN
+from homeassistant.const import STATE_ON, STATE_OPEN, STATE_UNAVAILABLE, STATE_UNKNOWN
 from homeassistant.core import Event, EventStateChangedData, callback
 from homeassistant.helpers.event import async_call_later, async_track_state_change_event
+from homeassistant.helpers import entity_registry as er, device_registry as dr
 
 from .const import (
     CONF_CLOSE_DELAY,
     CONF_ROOM_OPEN_DELAY,
     CONF_ROOM_SENSOR,
     CONF_WINDOW_ACTION,
-    CONF_WINDOW_TEMPERATURE,
     CONF_WINDOW_MODE,
+    CONF_WINDOW_SENSORS,
+    CONF_WINDOW_OPEN_DELAY,
+    CONF_WINDOW_TEMPERATURE,
     CONF_ZONE_OPEN_DELAY,
     CONF_ZONE_SENSOR,
     DEFAULT_CLOSE_DELAY,
     DEFAULT_ROOM_OPEN_DELAY,
+    DEFAULT_WINDOW_OPEN_DELAY,
     DEFAULT_ZONE_OPEN_DELAY,
     WindowControlAction,
     WindowControlMode,
@@ -58,6 +88,14 @@ class WindowControlHandler:
         self._zone_delay = group.config.get(CONF_ZONE_OPEN_DELAY, DEFAULT_ZONE_OPEN_DELAY)
         self._close_delay = group.config.get(CONF_CLOSE_DELAY, DEFAULT_CLOSE_DELAY)
 
+        # Area-based configuration
+        self._window_sensors = group.config.get(CONF_WINDOW_SENSORS, [])
+        self._window_open_delay = group.config.get(CONF_WINDOW_OPEN_DELAY, DEFAULT_WINDOW_OPEN_DELAY)
+
+        # Area-based state tracking
+        self._timers: dict[str, Any] = {}
+
+        # Legacy state tracking
         self._room_open = False
         self._zone_open = False
         self._room_last_changed = None
@@ -102,6 +140,19 @@ class WindowControlHandler:
             _LOGGER.debug("[%s] Window control is disabled (window_mode=%s)", self._group.entity_id, self._window_control_mode)
             return
 
+        # Area-based mode
+        if self._window_control_mode == WindowControlMode.AREA_BASED:
+            if not self._window_sensors:
+                _LOGGER.warning("[%s] Area-based window control enabled but no sensors configured", self._group.entity_id)
+                return
+            
+            self._unsub_listener = async_track_state_change_event(
+                self._hass, self._window_sensors, self._area_based_listener
+            )
+            _LOGGER.debug("[%s] Area-based window control subscribed to: %s", self._group.entity_id, self._window_sensors)
+            return
+
+        # Legacy mode
         sensors_to_track = []
         if self._room_sensor:
             sensors_to_track.append(self._room_sensor)
@@ -242,3 +293,142 @@ class WindowControlHandler:
             self._group.entity_id, mode, delay, self._room_open, self._zone_open)
 
         return mode, delay
+
+    # Area-based window control methods
+
+    @callback
+    def _area_based_listener(self, event: Event[EventStateChangedData]) -> None:
+        """Handle window sensor state changes in area-based mode."""
+        window_id = event.data.get("entity_id")
+        if not window_id:
+            return
+        
+        new_state = event.data.get("new_state")
+        if not new_state or new_state.state in (STATE_UNAVAILABLE, STATE_UNKNOWN):
+            return
+
+        is_open = new_state.state in (STATE_ON, STATE_OPEN)
+        
+        if window_id in self._timers:
+            self._timers[window_id]()
+            del self._timers[window_id]
+        
+        if is_open:
+            delay = self._window_open_delay
+            _LOGGER.debug("[%s] Window %s opened, scheduling turn off in %ss", 
+                         self._group.entity_id, window_id, delay)
+            
+            self._timers[window_id] = async_call_later(
+                self._hass, delay,
+                lambda _: self._hass.loop.call_soon_threadsafe(
+                    self._hass.async_create_task, self._handle_window_opened(window_id)
+                )
+            )
+        else:
+            delay = self._close_delay
+            _LOGGER.debug("[%s] Window %s closed, scheduling restore check in %ss", 
+                         self._group.entity_id, window_id, delay)
+            
+            self._timers[window_id] = async_call_later(
+                self._hass, delay,
+                lambda _: self._hass.loop.call_soon_threadsafe(
+                    self._hass.async_create_task, self._handle_window_closed(window_id)
+                )
+            )
+
+    async def _handle_window_opened(self, window_id: str) -> None:
+        """Handle window opening after delay."""
+        state = self._hass.states.get(window_id)
+        if not state or state.state not in (STATE_ON, STATE_OPEN):
+            _LOGGER.debug("[%s] Window %s no longer open, skipping", self._group.entity_id, window_id)
+            return
+            
+        window_area = self._get_entity_area(window_id)
+        if not window_area:
+            _LOGGER.warning("[%s] Cannot determine area for window %s", self._group.entity_id, window_id)
+            return
+
+        thermostats_to_turn_off = self._get_thermostats_in_area(window_area, only_active=True)
+        
+        if not thermostats_to_turn_off:
+            _LOGGER.debug("[%s] No active thermostats in area '%s'", self._group.entity_id, window_area)
+            return
+
+        _LOGGER.info("[%s] Window %s opened in area '%s', turning off: %s", 
+                    self._group.entity_id, window_id, window_area, thermostats_to_turn_off)
+        
+        await self.call_handler.call_immediate({"hvac_mode": HVACMode.OFF}, entity_ids=thermostats_to_turn_off)
+
+    async def _handle_window_closed(self, window_id: str) -> None:
+        """Handle window closing after delay."""
+        state = self._hass.states.get(window_id)
+        if not state or state.state in (STATE_ON, STATE_OPEN):
+            _LOGGER.debug("[%s] Window %s no longer closed, skipping", self._group.entity_id, window_id)
+            return
+            
+        window_area = self._get_entity_area(window_id)
+        if not window_area:
+            return
+
+        # Check if any other windows in same area are still open
+        for other_window_id in self._window_sensors:
+            if other_window_id == window_id:
+                continue
+            
+            if self._get_entity_area(other_window_id) == window_area:
+                state = self._hass.states.get(other_window_id)
+                if state and state.state in (STATE_ON, STATE_OPEN):
+                    _LOGGER.debug("[%s] Window %s closed but other windows still open in area '%s'", 
+                                 self._group.entity_id, window_id, window_area)
+                    return
+
+        thermostats_to_restore = []
+        for member_id in self._get_thermostats_in_area(window_area):
+            state = self._hass.states.get(member_id)
+            if state and state.state == HVACMode.OFF:
+                thermostats_to_restore.append(member_id)
+        
+        if not thermostats_to_restore:
+            _LOGGER.debug("[%s] No thermostats to restore in area '%s'", self._group.entity_id, window_area)
+            return
+
+        if self.target_state.hvac_mode == HVACMode.OFF:
+            _LOGGER.debug("[%s] Target mode is OFF, not restoring", self._group.entity_id)
+            return
+
+        _LOGGER.info("[%s] Window %s closed, restoring area '%s': %s", 
+                    self._group.entity_id, window_id, window_area, thermostats_to_restore)
+        
+        await self.call_handler.call_immediate(entity_ids=thermostats_to_restore)
+
+    def _get_thermostats_in_area(self, area_id: str, only_active: bool = False) -> list[str]:
+        """Get list of thermostats in the specified area."""
+        thermostats = []
+        for member_id in self._group.climate_entity_ids:
+            if self._get_entity_area(member_id) == area_id:
+                if only_active:
+                    state = self._hass.states.get(member_id)
+                    if state and state.state != HVACMode.OFF:
+                        thermostats.append(member_id)
+                else:
+                    thermostats.append(member_id)
+        return thermostats
+
+    def _get_entity_area(self, entity_id: str) -> str | None:
+        """Get the area ID for an entity."""
+        ent_reg = er.async_get(self._hass)
+        entity_entry = ent_reg.async_get(entity_id)
+        
+        if not entity_entry:
+            return None
+        
+        if entity_entry.area_id:
+            return entity_entry.area_id
+        
+        if entity_entry.device_id:
+            dev_reg = dr.async_get(self._hass)
+            device_entry = dev_reg.async_get(entity_entry.device_id)
+            if device_entry and device_entry.area_id:
+                return device_entry.area_id
+        
+        return None
