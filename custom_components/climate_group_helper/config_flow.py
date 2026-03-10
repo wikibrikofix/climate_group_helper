@@ -430,10 +430,10 @@ class ClimateGroupOptionsFlow(config_entries.OptionsFlow):
 
         # Area-based mode fields
         if window_mode == WindowControlMode.AREA_BASED:
-            schema_dict[vol.Optional(CONF_WINDOW_SENSORS, description={"suggested_value": config.get(CONF_WINDOW_SENSORS, [])})] = selector.EntitySelector(
+            schema_dict[vol.Required(CONF_WINDOW_SENSORS, default=config.get(CONF_WINDOW_SENSORS, []))] = selector.EntitySelector(
                 selector.EntitySelectorConfig(domain="binary_sensor", multiple=True)
             )
-            schema_dict[vol.Optional(CONF_WINDOW_OPEN_DELAY, default=config.get(CONF_WINDOW_OPEN_DELAY, DEFAULT_WINDOW_OPEN_DELAY))] = selector.NumberSelector(
+            schema_dict[vol.Required(CONF_WINDOW_OPEN_DELAY, default=config.get(CONF_WINDOW_OPEN_DELAY, DEFAULT_WINDOW_OPEN_DELAY))] = selector.NumberSelector(
                 selector.NumberSelectorConfig(min=0, max=120, step=1, unit_of_measurement="s", mode=selector.NumberSelectorMode.SLIDER)
             )
         # Legacy mode fields
