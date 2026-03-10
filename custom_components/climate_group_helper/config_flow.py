@@ -1,6 +1,7 @@
 """Config flow for Climate Group helper integration."""
 
 from __future__ import annotations
+import logging
 from typing import Any
 
 import voluptuous as vol
@@ -90,6 +91,8 @@ from .climate import (
     DEFAULT_MIN_TEMP,
     DEFAULT_MAX_TEMP,
 )
+
+_LOGGER = logging.getLogger(__name__)
 
 
 class ClimateGroupConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
