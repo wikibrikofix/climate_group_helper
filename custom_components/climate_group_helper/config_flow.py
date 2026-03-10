@@ -408,6 +408,13 @@ class ClimateGroupOptionsFlow(config_entries.OptionsFlow):
 
         # Build dynamic schema based on window mode
         window_mode = config.get(CONF_WINDOW_MODE, WindowControlMode.OFF)
+        # Ensure window_mode is a WindowControlMode enum (handle string values from config)
+        if isinstance(window_mode, str):
+            try:
+                window_mode = WindowControlMode(window_mode)
+            except ValueError:
+                window_mode = WindowControlMode.OFF
+        _LOGGER.debug("Window mode in config_flow: %s (type: %s)", window_mode, type(window_mode))
         
         schema_dict = {
             vol.Required(CONF_WINDOW_MODE, default=window_mode): selector.SelectSelector(
@@ -430,6 +437,7 @@ class ClimateGroupOptionsFlow(config_entries.OptionsFlow):
 
         # Area-based mode fields
         if window_mode == WindowControlMode.AREA_BASED:
+            _LOGGER.debug("Adding area-based fields to schema")
             schema_dict[vol.Required(CONF_WINDOW_SENSORS, default=config.get(CONF_WINDOW_SENSORS, []))] = selector.EntitySelector(
                 selector.EntitySelectorConfig(domain="binary_sensor", multiple=True)
             )
